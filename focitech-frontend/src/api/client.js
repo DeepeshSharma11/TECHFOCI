@@ -2,8 +2,8 @@ import axios from 'axios';
 import { supabase } from '../supabaseClient';
 
 // 1. Centralized Configuration
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
-// const API_URL = import.meta.env.VITE_API_URL || 'https://techfoci.onrender.com';
+
+const API_URL = import.meta.env.VITE_API_URL || 'https://techfoci.onrender.com';
 
 const api = axios.create({
   baseURL: API_URL,
