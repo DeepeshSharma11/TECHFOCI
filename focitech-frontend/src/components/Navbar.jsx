@@ -120,6 +120,10 @@ const Navbar = () => {
 
               {user ? (
                 <div className="flex items-center gap-3">
+                  {/* PROFILE BUTTON - ADDED TO DESKTOP */}
+                  <Link to="/profile" className="p-2 text-slate-400 hover:text-blue-500 transition-colors">
+                    <UserIcon size={20} />
+                  </Link>
                   {isAdmin && <Link to="/admin" className="p-2 text-amber-500 hover:scale-110 transition"><ShieldCheck size={18} /></Link>}
                   <button onClick={handleLogout} className="p-2 text-red-500/80 hover:text-red-500 transition"><LogOut size={18} /></button>
                 </div>
@@ -138,7 +142,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* --- MOBILE OVERLAY (Lag-Free Version) --- */}
+      {/* --- MOBILE OVERLAY (Lag-Free & Solid) --- */}
       <AnimatePresence>
         {isOpen && (
           <motion.div 
@@ -159,18 +163,22 @@ const Navbar = () => {
             ))}
 
             <div className="mt-auto pb-10 flex flex-col gap-4">
-              <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.4em] px-2">Authentication</p>
+              <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.4em] px-2">Account Node</p>
               {user ? (
-                <>
+                <div className="grid grid-cols-2 gap-3">
+                  {/* PROFILE BUTTON FOR MOBILE */}
+                  <Link to="/profile" onClick={() => setIsOpen(false)} className="flex items-center justify-center gap-2 bg-white/5 py-4 rounded-xl text-[10px] font-black uppercase border border-white/10 text-white">
+                    <UserIcon size={16} /> Profile
+                  </Link>
+                  <button onClick={handleLogout} className="flex items-center justify-center gap-2 bg-red-500/10 text-red-500 py-4 rounded-xl text-[10px] font-black uppercase border border-red-500/20">
+                    <LogOut size={16} /> Logout
+                  </button>
                   {isAdmin && (
-                    <Link to="/admin" className="w-full text-center bg-amber-500/10 text-amber-500 py-4 rounded-xl font-bold border border-amber-500/20 text-xs uppercase tracking-widest">
-                      Admin Command Center
+                    <Link to="/admin" onClick={() => setIsOpen(false)} className="col-span-2 flex items-center justify-center gap-2 bg-amber-500/10 py-4 rounded-xl font-bold border border-amber-500/20 text-[10px] uppercase tracking-widest text-amber-500">
+                      <ShieldCheck size={16} /> Admin Command Center
                     </Link>
                   )}
-                  <button onClick={handleLogout} className="w-full text-center bg-red-500/10 text-red-500 py-4 rounded-xl font-bold border border-red-500/20 text-xs uppercase tracking-widest">
-                    Terminate Session
-                  </button>
-                </>
+                </div>
               ) : (
                 <Link to="/login" className="w-full text-center bg-blue-600 text-white py-5 rounded-xl font-black text-xs tracking-[0.2em] uppercase">
                   Access System
