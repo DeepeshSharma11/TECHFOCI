@@ -2,22 +2,27 @@ import axios from 'axios';
 import { supabase } from '../supabaseClient';
 
 // 1. Centralized Configuration
-
+// IMPORTANT: Backend logs mein 404 aa raha hai, isliye base URL check karein.
 const API_URL = import.meta.env.VITE_API_URL || 'https://techfoci.onrender.com/api/v1';
 
 const api = axios.create({
   baseURL: API_URL,
-  timeout: 10000, // 10 seconds timeout for better UX
+  timeout: 15000, // Increased to 15s for Render cold starts
   headers: {
     'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    'X-Requested-With': 'XMLHttpRequest'
+    'Accept': 'application/json'
   },
 });
 
 // 2. Request Interceptor: Secure Token Management
 api.interceptors.request.use(
   async (config) => {
+    // Trailing slash fix: FastAPI sometimes fails on /contact/ vs /contact
+    // This ensures consistency based on your router settings
+    if (config.url && !config.url.endsWith('/')) {
+      config.url += '/';
+    }
+
     // Fetching session directly from Supabase for the latest JWT
     const { data: { session }, error } = await supabase.auth.getSession();
 
@@ -26,13 +31,12 @@ api.interceptors.request.use(
     }
 
     if (session?.access_token) {
-      // Injects the Bearer token for FastAPI's Depends(get_current_user)
+      // Bearer token for FastAPI's Depends(get_current_user)
       config.headers.Authorization = `Bearer ${session.access_token}`;
     }
 
-    // Performance tracking in development mode
     if (import.meta.env.DEV) {
-      console.log(`🚀 [API Request] ${config.method.toUpperCase()} -> ${config.url}`);
+      console.log(`🚀 [TechnoviaX Request] ${config.method.toUpperCase()} -> ${config.url}`);
     }
 
     return config;
@@ -42,33 +46,38 @@ api.interceptors.request.use(
 
 // 3. Response Interceptor: Smart Error & Session Management
 api.interceptors.response.use(
-  (response) => {
-    // You can transform data here if needed
-    return response;
-  },
+  (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
-    // Handle 401 Unauthorized (Session Expired)
+    // Handle 401 Unauthorized (Session Expired/Invalid)
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      console.warn("🔐 Session expired. Attempting to refresh...");
       
-      // If session is truly dead, we could force a logout or redirect to /login
-      // window.location.href = '/login'; 
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        console.warn("🔐 Session dead. Redirecting to login...");
+        // Use a small delay before redirecting for better UX
+        setTimeout(() => {
+          if (window.location.pathname !== '/login') {
+            window.location.href = '/login';
+          }
+        }, 2000);
+      }
     }
 
-    // Global Error Notification Logic
-    const errorMessage = error.response?.data?.detail || "Something went wrong with the TechnoviaX Engine.";
+    // Handle 404 (Not Found) - Your logs showed many of these
+    if (error.response?.status === 404) {
+      console.error("🔍 Route not found. Check if '/api/v1' is missing in baseURL or backend prefix.");
+    }
+
+    // Global Error Message
+    const errorMessage = error.response?.data?.detail || "TechnoviaX Engine Sync Failure.";
     
-    // For debugging during development
-    if (import.meta.env.DEV) {
-      console.error(`❌ [API Error] ${error.response?.status}: ${errorMessage}`);
-    }
-
     return Promise.reject({
       status: error.response?.status,
-      message: errorMessage,
+      message: Array.isArray(errorMessage) ? errorMessage[0].msg : errorMessage,
       originalError: error
     });
   }
