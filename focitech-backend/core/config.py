@@ -2,9 +2,9 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 from supabase import create_client, Client
-from pydantic_settings import BaseSettings # Correct ✅
+from pydantic_settings import BaseSettings
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# 1. Setup paths and load .env file for local testing
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 
@@ -12,23 +12,27 @@ class Settings(BaseSettings):
     # --- Project Metadata ---
     PROJECT_NAME: str = "Focitech Pvt. Ltd. Enterprise API"
     PROJECT_VERSION: str = "2.0.0"
-    DEBUG: bool = os.getenv("DEBUG", "False") == "True"
+    
+    # Converts "True" string to actual Boolean True/False
+    DEBUG: bool = os.getenv("DEBUG", "False").lower() == "true"
     
     # --- Supabase Configuration ---
+    # These will be pulled from Render's Environment Variables
     SUPABASE_URL: str = os.getenv("SUPABASE_URL")
     SUPABASE_KEY: str = os.getenv("SUPABASE_KEY")
-    # This is used to verify JWT tokens in your get_current_user middleware
     SUPABASE_JWT_SECRET: str = os.getenv("SUPABASE_JWT_SECRET") 
     
     # --- Server Settings ---
+    # IMPORTANT: Render gives you a dynamic port. This line catches it.
+    PORT: int = int(os.getenv("PORT", 8000))
     HOST: str = "0.0.0.0"
-    PORT: int = 8000
     
     # --- CORS Settings ---
-    # Add your Vercel/Netlify URL here once you deploy
+    # Add your Netlify URL here so the frontend can talk to the backend
     ALLOWED_ORIGINS: list = [
         "http://localhost:5173",
         "http://127.0.0.1:5173",
+        "https://technoviax.netlify.app", # Replace with your live Netlify link
     ]
 
     class Config:
@@ -38,12 +42,20 @@ class Settings(BaseSettings):
 settings = Settings()
 
 # --- Global Supabase Client Initialization ---
-try:
-    if not settings.SUPABASE_URL or not settings.SUPABASE_KEY:
-        raise ValueError("Missing Supabase credentials in .env")
-        
-    supabase: Client = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
-    print(f"✅ {settings.PROJECT_NAME} connected to Supabase successfully.")
-except Exception as e:
-    print(f"❌ Connection Error: {e}")
-    # In a real enterprise app, we log this to a file
+def init_supabase() -> Client:
+    """Helper function to safely connect to Supabase."""
+    try:
+        if not settings.SUPABASE_URL or not settings.SUPABASE_KEY:
+            # If keys are missing, we print a clear error for Render logs
+            print("❌ Error: SUPABASE_URL or SUPABASE_KEY is missing!")
+            return None
+            
+        client = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
+        print(f"✅ {settings.PROJECT_NAME} connected to Supabase successfully.")
+        return client
+    except Exception as e:
+        print(f"❌ Connection Error: {str(e)}")
+        return None
+
+# Create the global supabase object
+supabase = init_supabase()
