@@ -48,7 +48,7 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:5173",          # Vite Local
         "https://focitech.site",          # Primary Domain
-        "https://your-site.netlify.app", # Replace with your actual Netlify URL
+        "https://focitech1.netlify.app/", # Replace with your actual Netlify URL
         "*"                              # Optional: Use only if having strict issues
     ] if settings.DEBUG else settings.ALLOWED_ORIGINS, 
     allow_credentials=True,
