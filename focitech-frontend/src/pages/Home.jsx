@@ -55,7 +55,7 @@ const Home = () => {
           <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-5 justify-center items-center">
             <Link to="/projects" className="group relative px-10 py-5 bg-blue-600 text-white rounded-2xl font-bold transition-all hover:bg-blue-700 hover:shadow-[0_0_30px_rgba(37,99,235,0.4)] overflow-hidden">
               <span className="relative z-10 flex items-center gap-2">
-                Launch Portfolio <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                View Projects<ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
               </span>
             </Link>
             <Link to="/contact" className="px-10 py-5 bg-slate-900/50 backdrop-blur-md border border-slate-800 text-slate-300 rounded-2xl font-bold hover:bg-slate-800 transition-all">
