@@ -3,7 +3,7 @@ import { supabase } from '../supabaseClient';
 
 // 1. Centralized Configuration
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://techfoci.onrender.com';
+const API_URL = import.meta.env.VITE_API_URL || 'https://techfoci.onrender.com/api/v1';
 
 const api = axios.create({
   baseURL: API_URL,
