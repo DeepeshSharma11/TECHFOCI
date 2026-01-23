@@ -8,8 +8,6 @@ import {
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   const [scrolled, setScrolled] = useState(false);
   
   const { user, isAdmin, logout } = useAuth();
@@ -17,19 +15,23 @@ const Navbar = () => {
   const location = useLocation();
   const searchRef = useRef(null);
 
-  // Changes background color when you scroll down
+  // Background change on scroll logic
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 15);
+    const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Closes the menu automatically when you click a link
+  // Close menu on navigation
   useEffect(() => { setIsOpen(false); }, [location.pathname]);
 
-  // Stops the background from moving when the menu is open
+  // Prevent background scroll when mobile menu is active
   useEffect(() => {
-    document.body.style.overflow = isOpen ? 'hidden' : 'unset';
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
   }, [isOpen]);
 
   const handleLogout = async () => {
@@ -37,7 +39,7 @@ const Navbar = () => {
       await logout();
       navigate('/login');
     } catch (err) {
-      console.error("Logout error:", err);
+      console.error("Logout failed:", err);
     }
   };
 
@@ -49,7 +51,7 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className={`fixed top-0 w-full z-[100] transition-colors duration-300 ${
+    <nav className={`fixed top-0 w-full z-[100] transition-all duration-300 ${
       scrolled || isOpen 
         ? 'bg-[#020617] border-b border-white/10 py-3 shadow-2xl' 
         : 'bg-transparent py-5'
@@ -57,7 +59,7 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
         <div className="flex justify-between items-center">
           
-          {/* --- LOGO --- */}
+          {/* --- BRAND LOGO --- */}
           <Link to="/" className="flex items-center gap-3 group relative z-[110]">
             <div className="relative w-9 h-9 flex items-center justify-center">
               <div className="absolute inset-0 bg-blue-600 rounded-lg rotate-6 transition-transform duration-300 group-hover:rotate-0"></div>
@@ -68,14 +70,14 @@ const Navbar = () => {
             </span>
           </Link>
 
-          {/* --- PC MENU --- */}
+          {/* --- PC NAVIGATION (Hidden on Mobile) --- */}
           <div className="hidden lg:flex items-center gap-8">
             <div className="flex gap-1">
               {navLinks.map((link) => (
                 <Link 
                   key={link.name} to={link.path} 
                   className={`relative px-4 py-2 text-sm font-bold uppercase tracking-widest transition-colors ${
-                    location.pathname === link.path ? 'text-blue-500' : 'text-slate-400 hover:text-white'
+                    location.pathname === link.path ? 'text-blue-400 shadow-blue-500/10' : 'text-slate-400 hover:text-white'
                   }`}
                 >
                   {link.name}
@@ -92,50 +94,55 @@ const Navbar = () => {
                   <Link to="/profile" className="p-2 text-slate-400 hover:text-blue-500 transition-colors">
                     <UserIcon size={20} />
                   </Link>
-                  {isAdmin && <Link to="/admin" className="p-2 text-amber-500 hover:scale-110 transition"><ShieldCheck size={18} /></Link>}
-                  <button onClick={handleLogout} className="p-2 text-red-500/80 hover:text-red-500 transition"><LogOut size={18} /></button>
+                  {isAdmin && <Link to="/admin" className="p-2 text-amber-500 hover:scale-110 transition-all"><ShieldCheck size={18} /></Link>}
+                  <button onClick={handleLogout} className="p-2 text-red-500/80 hover:text-red-500 transition-all"><LogOut size={18} /></button>
                 </div>
               ) : (
-                <Link to="/login" className="px-5 py-2 bg-blue-600 text-[10px] font-black tracking-widest text-white rounded hover:bg-blue-500 transition-all">
+                <Link to="/login" className="px-5 py-2 bg-blue-600 text-[10px] font-black tracking-widest text-white rounded hover:bg-blue-500 transition-all shadow-lg shadow-blue-600/20">
                   SIGN IN
                 </Link>
               )}
             </div>
           </div>
 
-          {/* --- MOBILE BUTTON --- */}
-          <button onClick={() => setIsOpen(!isOpen)} className="lg:hidden p-2 text-white relative z-[110]">
-            {isOpen ? <X size={26} /> : <Menu size={26} />}
-          </button>
+          {/* --- MOBILE TOGGLE BUTTON --- */}
+          <div className="flex lg:hidden items-center gap-4 relative z-[110]">
+             <button onClick={() => setIsOpen(!isOpen)} className="p-2 text-white bg-white/5 border border-white/10 rounded-lg">
+               {isOpen ? <X size={24} /> : <Menu size={24} />}
+             </button>
+          </div>
         </div>
       </div>
 
-      {/* --- MOBILE MENU (WORKS ON ALL SCREENS) --- */}
+      {/* --- MOBILE DRAWER (Scrollable & No Overlap) --- */}
       <AnimatePresence>
         {isOpen && (
           <motion.div 
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="lg:hidden fixed inset-0 bg-[#020617] z-[105] flex flex-col p-8 pt-24 overflow-y-auto"
+            initial={{ opacity: 0, x: '100%' }} 
+            animate={{ opacity: 1, x: 0 }} 
+            exit={{ opacity: 0, x: '100%' }}
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            className="lg:hidden fixed inset-0 bg-[#020617] z-[105] flex flex-col p-8 pt-28 overflow-y-auto"
           >
-            {/* Links Section */}
-            <div className="flex flex-col space-y-4 mb-8">
+            {/* Nav Links */}
+            <div className="flex flex-col space-y-4 mb-10">
               <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.4em] px-2">Navigation</p>
               {navLinks.map((link) => (
                 <Link
                   key={link.name} to={link.path}
-                  className={`flex justify-between items-center p-4 rounded-xl text-3xl font-black italic tracking-tighter border-b border-white/5 transition-all ${
-                    location.pathname === link.path ? 'text-blue-500 bg-white/5' : 'text-slate-300'
+                  className={`flex justify-between items-center p-5 rounded-2xl text-2xl font-black italic tracking-tighter border border-white/5 transition-all ${
+                    location.pathname === link.path ? 'bg-blue-600 text-white shadow-xl shadow-blue-600/20' : 'bg-white/5 text-slate-300'
                   }`}
                 >
                   {link.name}
-                  <ChevronRight size={20} className={location.pathname === link.path ? 'text-blue-500' : 'opacity-10'} />
+                  <ChevronRight size={20} className={location.pathname === link.path ? 'text-white' : 'opacity-20'} />
                 </Link>
               ))}
             </div>
 
-            {/* Account Section */}
-            <div className="mt-auto pt-8 pb-10 flex flex-col space-y-6">
-              <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.4em] px-2">Account Control</p>
+            {/* Account Controls */}
+            <div className="mt-auto pb-10 flex flex-col space-y-6">
+              <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.4em] px-2">Account Management</p>
               {user ? (
                 <div className="flex flex-col space-y-3">
                   <div className="grid grid-cols-2 gap-3">
@@ -147,14 +154,14 @@ const Navbar = () => {
                     </button>
                   </div>
                   {isAdmin && (
-                    <Link to="/admin" className="w-full text-center bg-amber-500/10 text-amber-500 py-4 rounded-xl font-bold border border-amber-500/20 text-[11px] uppercase tracking-widest">
-                      <ShieldCheck size={16} className="inline mr-2" /> Admin Dashboard
+                    <Link to="/admin" className="w-full text-center bg-amber-500/10 text-amber-500 py-4 rounded-xl font-bold border border-amber-500/20 text-[11px] uppercase tracking-[0.2em] shadow-lg shadow-amber-500/10">
+                      <ShieldCheck size={16} className="inline mr-2" /> Admin Command Center
                     </Link>
                   )}
                 </div>
               ) : (
                 <Link to="/login" className="w-full text-center bg-blue-600 text-white py-5 rounded-xl font-black text-xs tracking-[0.2em] uppercase shadow-xl shadow-blue-600/30">
-                  Log In
+                  Log In To System
                 </Link>
               )}
             </div>
