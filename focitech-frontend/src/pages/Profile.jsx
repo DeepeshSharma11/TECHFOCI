@@ -47,7 +47,6 @@ const Profile = () => {
 
       if (error) throw error;
       setIsEditing(false);
-      // Optional: Add a success toast here
     } catch (err) {
       alert("Update failed: " + err.message);
     } finally {
@@ -84,27 +83,27 @@ const Profile = () => {
             </div>
           </div>
 
-          <div className="pt-20 pb-12 px-10">
+          <div className="pt-20 pb-12 px-6 md:px-10">
             <div className="flex flex-col md:flex-row justify-between items-start gap-6">
               <div className="flex-1 w-full">
                 <AnimatePresence mode="wait">
                   {isEditing ? (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4 max-w-md">
                       <input 
-                        className="bg-white/5 border border-white/10 rounded-xl px-4 py-2 w-full text-2xl font-bold outline-none focus:border-blue-500"
+                        className="bg-white/5 border border-white/10 rounded-xl px-4 py-2 w-full text-2xl font-bold outline-none focus:border-blue-500 text-white"
                         value={profileData.fullName}
                         onChange={(e) => setProfileData({...profileData, fullName: e.target.value})}
                         placeholder="Full Name"
                       />
-                      <div className="flex gap-2">
+                      <div className="flex flex-col sm:flex-row gap-2">
                         <input 
-                          className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-xs w-full outline-none"
+                          className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-xs w-full outline-none text-white"
                           value={profileData.location}
                           onChange={(e) => setProfileData({...profileData, location: e.target.value})}
                           placeholder="Location"
                         />
                         <input 
-                          className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-xs w-full outline-none"
+                          className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-xs w-full outline-none text-white"
                           value={profileData.education}
                           onChange={(e) => setProfileData({...profileData, education: e.target.value})}
                           placeholder="Education"
@@ -113,13 +112,13 @@ const Profile = () => {
                     </motion.div>
                   ) : (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                      <h1 className="text-4xl font-black text-white flex items-center gap-3">
-                        {profileData.fullName} {isAdmin && <ShieldCheck className="text-blue-400" size={28} />}
+                      <h1 className="text-3xl md:text-4xl font-black text-white flex items-center gap-3 flex-wrap">
+                        {profileData.fullName} {isAdmin && <ShieldCheck className="text-blue-400 shrink-0" size={28} />}
                       </h1>
                       <p className="text-blue-500 font-black uppercase tracking-[0.2em] text-[10px] mt-2">
                         {isAdmin ? 'Founder & CEO @ Focitech' : 'TechnoviaX Associate'}
                       </p>
-                      <div className="flex gap-3 mt-6">
+                      <div className="flex flex-wrap gap-3 mt-6">
                         <span className="flex items-center gap-2 text-[10px] font-bold text-slate-400 bg-white/5 px-4 py-2 rounded-full border border-white/5">
                           <MapPin size={12} className="text-blue-500"/> {profileData.location}
                         </span>
@@ -132,7 +131,7 @@ const Profile = () => {
                 </AnimatePresence>
               </div>
 
-              <div className="flex gap-3">
+              <div className="flex gap-3 w-full md:w-auto">
                 {isEditing ? (
                   <>
                     <button 
@@ -144,7 +143,7 @@ const Profile = () => {
                     <button 
                       onClick={handleUpdate}
                       disabled={updating}
-                      className="px-8 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-black text-xs uppercase tracking-widest flex items-center gap-2 transition-all shadow-lg shadow-blue-600/20"
+                      className="flex-1 md:flex-none px-8 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-black text-xs uppercase tracking-widest flex items-center justify-center gap-2 transition-all shadow-lg shadow-blue-600/20"
                     >
                       {updating ? <Loader2 className="animate-spin" size={18} /> : <Save size={18} />}
                       Save Node
@@ -153,7 +152,7 @@ const Profile = () => {
                 ) : (
                   <button 
                     onClick={() => setIsEditing(true)}
-                    className="px-8 py-3 bg-white/5 hover:bg-white/10 text-white rounded-2xl font-black text-xs uppercase tracking-widest border border-white/10 flex items-center gap-2 transition-all"
+                    className="w-full md:w-auto px-8 py-3 bg-white/5 hover:bg-white/10 text-white rounded-2xl font-black text-xs uppercase tracking-widest border border-white/10 flex items-center justify-center gap-2 transition-all"
                   >
                     <Edit3 size={18} /> Edit Profile
                   </button>
@@ -162,10 +161,14 @@ const Profile = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-16">
-              <div className="p-8 bg-white/5 rounded-[2rem] border border-white/5 group hover:border-blue-500/30 transition-all">
+              {/* FIXED EMAIL CARD */}
+              <div className="p-8 bg-white/5 rounded-[2rem] border border-white/5 group hover:border-blue-500/30 transition-all overflow-hidden">
                 <Mail className="text-blue-500 mb-4" size={24} />
                 <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.3em]">Communication Node</p>
-                <p className="text-white font-bold text-lg mt-1">{user?.email}</p>
+                {/* break-all ensures the email wraps instead of overflowing */}
+                <p className="text-white font-bold text-lg mt-1 break-all md:break-words">
+                  {user?.email}
+                </p>
                 <p className="text-[10px] text-slate-600 mt-2 font-bold italic underline decoration-blue-500/50">Primary Email (Locked)</p>
               </div>
 
@@ -177,15 +180,15 @@ const Profile = () => {
               </div>
             </div>
 
-            <div className="mt-16 pt-8 border-t border-white/5 flex justify-between items-center">
+            <div className="mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
               <button 
                 onClick={logout}
-                className="flex items-center gap-3 text-red-500 hover:text-white hover:bg-red-500 font-black text-[10px] uppercase tracking-[0.2em] px-8 py-4 rounded-2xl transition-all border border-red-500/20"
+                className="w-full md:w-auto flex items-center justify-center gap-3 text-red-500 hover:text-white hover:bg-red-500 font-black text-[10px] uppercase tracking-[0.2em] px-8 py-4 rounded-2xl transition-all border border-red-500/20"
               >
                 <LogOut size={16} /> Terminate Session
               </button>
               
-              <div className="hidden md:flex items-center gap-2 text-[10px] font-black text-slate-600 uppercase tracking-widest">
+              <div className="flex items-center gap-2 text-[10px] font-black text-slate-600 uppercase tracking-widest">
                 <ShieldCheck size={14} /> Focitech Encrypted Profile
               </div>
             </div>
