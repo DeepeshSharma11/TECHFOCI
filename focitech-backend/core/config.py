@@ -33,6 +33,7 @@ class Settings(BaseSettings):
         "http://localhost:5173",
         "http://127.0.0.1:5173",
         "https://technoviax.netlify.app", # Replace with your live Netlify link
+        "https://focitech.site"           # Focitech Primary Domain
     ]
 
     class Config:
