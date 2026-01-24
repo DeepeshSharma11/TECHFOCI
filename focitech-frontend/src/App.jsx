@@ -16,6 +16,7 @@ import Signup from './pages/Signup';
 import Profile from './pages/Profile';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminInquiries from './pages/AdminInquiries';
+import OurBusiness from './pages/OurBusiness';
 
 // --- ADVANCED PROTECTED ROUTE COMPONENT ---
 // Yeh component check karta hai ki user logged in hai ya nahi
@@ -48,6 +49,7 @@ function AppRoutes() {
           <Route path="/projects" element={<Projects />} />
           <Route path="/team" element={<Team />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/our-business" element={<OurBusiness />} />
 
           {/* --- Auth Routes --- */}
           <Route path="/login" element={<Login />} />
@@ -90,6 +92,7 @@ function AppRoutes() {
             </div>
           } />
         </Routes>
+        
       </main>
 
       <Footer />
@@ -107,5 +110,4 @@ function App() {
     </AuthProvider>
   );
 }
-
 export default App;
