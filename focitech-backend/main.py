@@ -52,7 +52,7 @@ app.add_middleware(
         "http://localhost:5173",
         "http://127.0.0.1:5173",
         "https://focitech.site",
-        
+        "https://www.focitech.site",
         "https://focitech1.netlify.app",
     ] if not settings.DEBUG else ["*"], 
     allow_credentials=True,
