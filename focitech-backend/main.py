@@ -12,6 +12,7 @@ from contextlib import asynccontextmanager
 from core.config import settings
 from routers import projects, inquiries, team, auth
 
+
 # --- Setup Production Logging ---
 logging.basicConfig(
     level=logging.INFO,
@@ -108,6 +109,7 @@ app.include_router(auth, prefix="/api/v1/auth", tags=["Authentication"])
 app.include_router(projects.router if hasattr(projects, 'router') else projects, prefix="/api/v1/portfolio", tags=["Projects"])
 app.include_router(inquiries.router if hasattr(inquiries, 'router') else inquiries, prefix="/api/v1/contact", tags=["Inquiries"])
 app.include_router(team.router if hasattr(team, 'router') else team, prefix="/api/v1/corporate", tags=["Team"])
+# app.include_router(Careers.router, prefix="/api/v1/careers", tags=["Careers"])
 
 @app.get("/", tags=["Health"])
 async def root():
