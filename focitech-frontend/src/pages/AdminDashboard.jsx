@@ -646,198 +646,232 @@ const AdminDashboard = () => {
       </div>
 
       {/* Modal */}
-      <AnimatePresence>
-        {showModal && (
-          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/90 backdrop-blur-lg overflow-y-auto">
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-gradient-to-b from-slate-900 to-slate-950 border border-white/10 w-full max-w-lg rounded-3xl p-6 lg:p-8 my-8 shadow-2xl shadow-black/50"
-              onClick={(e) => e.stopPropagation()}
+      {/* Modal */}
+<AnimatePresence>
+  {showModal && (
+    <div className="fixed inset-0 z-[9999] flex items-start sm:items-center justify-center p-0 sm:p-2 md:p-4 bg-black/90 backdrop-blur-lg overflow-y-auto">
+      <motion.div
+        initial={{ scale: 0.9, opacity: 0, y: 20 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        exit={{ scale: 0.9, opacity: 0, y: 20 }}
+        className="bg-gradient-to-b from-slate-900 to-slate-950 border border-white/10 w-full min-h-screen sm:min-h-0 sm:max-w-lg sm:rounded-2xl md:rounded-3xl shadow-2xl shadow-black/50"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Fixed Header for Mobile */}
+        <div className="sticky top-0 z-10 bg-slate-900 border-b border-white/10 px-4 py-3 sm:px-6 sm:py-4 flex items-center justify-between">
+          <div className="flex-1 min-w-0">
+            <h3 className="text-lg font-bold truncate">
+              Add New {modalType === 'project' ? 'Project' : 'Team Member'}
+            </h3>
+            <p className="text-xs text-slate-400 truncate">
+              Fill in the details below
+            </p>
+          </div>
+          <button
+            onClick={() => setShowModal(false)}
+            className="ml-4 p-1.5 hover:bg-white/5 rounded-lg transition-colors flex-shrink-0"
+            aria-label="Close"
+          >
+            <X size={20} />
+          </button>
+        </div>
+
+        {/* Scrollable Content */}
+        <div className="overflow-y-auto max-h-[calc(100vh-60px)] sm:max-h-[80vh]">
+          <div className="p-4 sm:p-6 md:p-8">
+            <form
+              onSubmit={modalType === 'project' ? handleAddProject : handleAddMember}
+              className="space-y-4 sm:space-y-6"
             >
-              <div className="flex justify-between items-center mb-6">
-                <div>
-                  <h3 className="text-xl lg:text-2xl font-bold">
-                    Add New {modalType === 'project' ? 'Project' : 'Team Member'}
-                  </h3>
-                  <p className="text-slate-500 text-sm mt-1">
-                    Fill in the details below
-                  </p>
-                </div>
-                <button
-                  onClick={() => setShowModal(false)}
-                  className="p-2 hover:bg-white/5 rounded-full transition-colors"
-                >
-                  <X size={24} />
-                </button>
-              </div>
+              {modalType === 'project' ? (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-2">Project Title *</label>
+                    <input
+                      type="text"
+                      placeholder="Enter project title"
+                      value={newProject.title}
+                      onChange={(e) => setNewProject({ ...newProject, title: e.target.value })}
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 outline-none focus:border-blue-500 transition-colors text-sm"
+                      required
+                    />
+                  </div>
 
-              <form
-                onSubmit={modalType === 'project' ? handleAddProject : handleAddMember}
-                className="space-y-4"
-              >
-                {modalType === 'project' ? (
-                  <>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                      Description * (Min. 20 characters)
+                    </label>
+                    <textarea
+                      placeholder="Describe the project in detail"
+                      value={newProject.description}
+                      onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
+                      rows="4"
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 outline-none focus:border-blue-500 transition-colors text-sm resize-none"
+                      required
+                      minLength={20}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                      Tech Stack * (comma separated)
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="React, FastAPI, Supabase, etc."
+                      value={newProject.tech_stack}
+                      onChange={(e) => setNewProject({ ...newProject, tech_stack: e.target.value })}
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 outline-none focus:border-blue-500 transition-colors text-sm"
+                      required
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-slate-300 mb-2">Project Title *</label>
-                      <input
-                        type="text"
-                        placeholder="Enter project title"
-                        value={newProject.title}
-                        onChange={(e) => setNewProject({ ...newProject, title: e.target.value })}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 outline-none focus:border-blue-500 transition-colors"
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-slate-300 mb-2">Description * (Min. 20 characters)</label>
-                      <textarea
-                        placeholder="Describe the project in detail"
-                        value={newProject.description}
-                        onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
-                        rows="4"
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 outline-none focus:border-blue-500 transition-colors resize-none"
-                        required
-                        minLength={20}
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-slate-300 mb-2">Tech Stack * (comma separated)</label>
-                      <input
-                        type="text"
-                        placeholder="React, FastAPI, Supabase, etc."
-                        value={newProject.tech_stack}
-                        onChange={(e) => setNewProject({ ...newProject, tech_stack: e.target.value })}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 outline-none focus:border-blue-500 transition-colors"
-                        required
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-slate-300 mb-2">Live URL</label>
-                        <input
-                          type="url"
-                          placeholder="https://example.com"
-                          value={newProject.live_url}
-                          onChange={(e) => setNewProject({ ...newProject, live_url: e.target.value })}
-                          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 outline-none focus:border-blue-500 transition-colors"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-slate-300 mb-2">GitHub URL</label>
-                        <input
-                          type="url"
-                          placeholder="https://github.com/username/repo"
-                          value={newProject.github_url}
-                          onChange={(e) => setNewProject({ ...newProject, github_url: e.target.value })}
-                          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 outline-none focus:border-blue-500 transition-colors"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-slate-300 mb-2">Image URL</label>
+                      <label className="block text-sm font-medium text-slate-300 mb-2">Live URL</label>
                       <input
                         type="url"
-                        placeholder="https://images.unsplash.com/..."
-                        value={newProject.image_url}
-                        onChange={(e) => setNewProject({ ...newProject, image_url: e.target.value })}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 outline-none focus:border-blue-500 transition-colors"
+                        placeholder="https://example.com"
+                        value={newProject.live_url}
+                        onChange={(e) => setNewProject({ ...newProject, live_url: e.target.value })}
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 outline-none focus:border-blue-500 transition-colors text-sm"
                       />
                     </div>
-                  </>
-                ) : (
-                  <>
+
                     <div>
-                      <label className="block text-sm font-medium text-slate-300 mb-2">Full Name *</label>
+                      <label className="block text-sm font-medium text-slate-300 mb-2">GitHub URL</label>
                       <input
-                        type="text"
-                        placeholder="Enter full name"
-                        value={newMember.name}
-                        onChange={(e) => setNewMember({ ...newMember, name: e.target.value })}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 outline-none focus:border-blue-500 transition-colors"
-                        required
+                        type="url"
+                        placeholder="https://github.com/username/repo"
+                        value={newProject.github_url}
+                        onChange={(e) => setNewProject({ ...newProject, github_url: e.target.value })}
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 outline-none focus:border-blue-500 transition-colors text-sm"
                       />
                     </div>
+                  </div>
 
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-2">Image URL</label>
+                    <input
+                      type="url"
+                      placeholder="https://images.unsplash.com/..."
+                      value={newProject.image_url}
+                      onChange={(e) => setNewProject({ ...newProject, image_url: e.target.value })}
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 outline-none focus:border-blue-500 transition-colors text-sm"
+                    />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-2">Full Name *</label>
+                    <input
+                      type="text"
+                      placeholder="Enter full name"
+                      value={newMember.name}
+                      onChange={(e) => setNewMember({ ...newMember, name: e.target.value })}
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 outline-none focus:border-blue-500 transition-colors text-sm"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-2">Role *</label>
+                    <input
+                      type="text"
+                      placeholder="e.g., Lead Developer, Designer, etc."
+                      value={newMember.role}
+                      onChange={(e) => setNewMember({ ...newMember, role: e.target.value })}
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 outline-none focus:border-blue-500 transition-colors text-sm"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-2">Bio</label>
+                    <textarea
+                      placeholder="Short bio about the team member"
+                      value={newMember.bio}
+                      onChange={(e) => setNewMember({ ...newMember, bio: e.target.value })}
+                      rows="3"
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 outline-none focus:border-blue-500 transition-colors text-sm resize-none"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-slate-300 mb-2">Role *</label>
+                      <label className="block text-sm font-medium text-slate-300 mb-2">LinkedIn URL</label>
                       <input
-                        type="text"
-                        placeholder="e.g., Lead Developer, Designer, etc."
-                        value={newMember.role}
-                        onChange={(e) => setNewMember({ ...newMember, role: e.target.value })}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 outline-none focus:border-blue-500 transition-colors"
-                        required
+                        type="url"
+                        placeholder="https://linkedin.com/in/username"
+                        value={newMember.linkedin_url}
+                        onChange={(e) => setNewMember({ ...newMember, linkedin_url: e.target.value })}
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 outline-none focus:border-blue-500 transition-colors text-sm"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-slate-300 mb-2">Bio</label>
-                      <textarea
-                        placeholder="Short bio about the team member"
-                        value={newMember.bio}
-                        onChange={(e) => setNewMember({ ...newMember, bio: e.target.value })}
-                        rows="3"
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 outline-none focus:border-blue-500 transition-colors resize-none"
+                      <label className="block text-sm font-medium text-slate-300 mb-2">GitHub URL</label>
+                      <input
+                        type="url"
+                        placeholder="https://github.com/username"
+                        value={newMember.github_url}
+                        onChange={(e) => setNewMember({ ...newMember, github_url: e.target.value })}
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 outline-none focus:border-blue-500 transition-colors text-sm"
                       />
                     </div>
+                  </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-slate-300 mb-2">LinkedIn URL</label>
-                        <input
-                          type="url"
-                          placeholder="https://linkedin.com/in/username"
-                          value={newMember.linkedin_url}
-                          onChange={(e) => setNewMember({ ...newMember, linkedin_url: e.target.value })}
-                          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 outline-none focus:border-blue-500 transition-colors"
-                        />
-                      </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-2">Image URL</label>
+                    <input
+                      type="url"
+                      placeholder="https://images.unsplash.com/..."
+                      value={newMember.image_url}
+                      onChange={(e) => setNewMember({ ...newMember, image_url: e.target.value })}
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 outline-none focus:border-blue-500 transition-colors text-sm"
+                    />
+                  </div>
 
-                      <div>
-                        <label className="block text-sm font-medium text-slate-300 mb-2">GitHub URL</label>
-                        <input
-                          type="url"
-                          placeholder="https://github.com/username"
-                          value={newMember.github_url}
-                          onChange={(e) => setNewMember({ ...newMember, github_url: e.target.value })}
-                          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 outline-none focus:border-blue-500 transition-colors"
-                        />
-                      </div>
-                    </div>
-                  </>
-                )}
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-2">Twitter URL</label>
+                    <input
+                      type="url"
+                      placeholder="https://twitter.com/username"
+                      value={newMember.twitter_url}
+                      onChange={(e) => setNewMember({ ...newMember, twitter_url: e.target.value })}
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 outline-none focus:border-blue-500 transition-colors text-sm"
+                    />
+                  </div>
+                </>
+              )}
 
-                <div className="flex gap-3 pt-6 border-t border-white/5">
-                  <button
-                    type="button"
-                    onClick={() => setShowModal(false)}
-                    className="flex-1 py-3 bg-white/5 hover:bg-white/10 rounded-xl font-bold text-sm transition-colors"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className={`flex-1 py-3 rounded-xl font-bold text-sm transition-all ${
-                      modalType === 'project'
-                        ? 'bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700'
-                        : 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700'
-                    }`}
-                  >
-                    {modalType === 'project' ? 'Create Project' : 'Add Team Member'}
-                  </button>
-                </div>
-              </form>
-            </motion.div>
+              <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-white/5">
+                <button
+                  type="button"
+                  onClick={() => setShowModal(false)}
+                  className="py-2.5 sm:py-3 bg-white/5 hover:bg-white/10 rounded-xl font-bold text-sm transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className={`py-2.5 sm:py-3 rounded-xl font-bold text-sm transition-all ${
+                    modalType === 'project'
+                      ? 'bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700'
+                      : 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700'
+                  }`}
+                >
+                  {modalType === 'project' ? 'Create Project' : 'Add Team Member'}
+                </button>
+              </div>
+            </form>
           </div>
-        )}
-      </AnimatePresence>
+        </div>
+      </motion.div>
+    </div>
+  )}
+</AnimatePresence>
     </div>
   );
 };

@@ -113,6 +113,14 @@ const Footer = () => {
                   Our Businesses
                 </Link>
               </li>
+              <li>
+                <Link 
+                  to="/careers" 
+                  className="text-sm font-medium hover:text-blue-500 transition-colors duration-300 inline-block py-1"
+                >
+                  Careers
+                </Link>
+              </li>
             </ul>
           </div>
 
