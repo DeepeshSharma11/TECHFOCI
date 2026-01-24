@@ -33,6 +33,7 @@ class Settings(BaseSettings):
         "http://127.0.0.1:5173",
         "https://technoviax.netlify.app",
         "https://focitech.site"
+        "https://focitech1.netlify.app/"
     ]
 
     class Config:
