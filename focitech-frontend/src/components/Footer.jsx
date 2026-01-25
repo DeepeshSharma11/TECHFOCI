@@ -260,7 +260,7 @@ const Footer = () => {
               Terms
             </Link>
             <a 
-              href="https://blog.focitech.in" 
+              href="https://focitech1.blogspot.com/?m=1" 
               className="text-xs text-slate-500 hover:text-white transition-colors"
             >
               Blog
