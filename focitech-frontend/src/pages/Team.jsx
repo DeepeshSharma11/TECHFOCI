@@ -127,8 +127,8 @@ const Team = () => {
                     {[
                       { icon: <Linkedin size={18} />, url: member.linkedin_url, color: "hover:bg-blue-600" },
                       { icon: <Github size={18} />, url: member.github_url, color: "hover:bg-slate-700" },
-                      { icon: <Twitter size={18} />, url: member.twitter_url, color: "hover:bg-sky-500" },
-                      { icon: <Mail size={18} />, url: `mailto:${member.email}`, color: "hover:bg-emerald-600" }
+                      // { icon: <Twitter size={18} />, url: member.twitter_url, color: "hover:bg-sky-500" },
+                      // { icon: <Mail size={18} />, url: `mailto:${member.email}`, color: "hover:bg-emerald-600" }
                     ].map((social, idx) => (
                       <a 
                         key={idx}
