@@ -127,7 +127,7 @@ const Navbar = () => {
           >
             {/* Nav Links */}
             <div className="flex flex-col space-y-4 mb-10">
-              <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.4em] px-2">Navigation</p>
+              <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.4em] px-2"></p>
               {navLinks.map((link) => (
                 <Link
                   key={link.name} to={link.path}
