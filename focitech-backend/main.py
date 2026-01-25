@@ -68,6 +68,7 @@ app.add_middleware(
         "localhost", 
         "127.0.0.1", 
         "focitech.site",
+        "www.focitech.site"
         "techfoci.onrender.com", # Update with your Render subdomain
         "*.onrender.com", 
         "*.netlify.app"
