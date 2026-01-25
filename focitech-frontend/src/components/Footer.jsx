@@ -231,7 +231,7 @@ const Footer = () => {
 
             <div className="flex gap-6 md:gap-8 text-[10px] font-bold uppercase tracking-widest">
               <Link 
-                to="/privacy" 
+                to="/Privacy" 
                 className="hover:text-white transition-colors duration-300"
               >
                 Privacy
