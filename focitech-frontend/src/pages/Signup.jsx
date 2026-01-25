@@ -45,7 +45,7 @@ const Signup = () => {
               <UserPlus className="text-white w-10 h-10" />
             </motion.div>
             <h1 className="text-4xl font-black text-white tracking-tight">Create Account</h1>
-            <p className="text-slate-400 mt-3 font-medium text-lg">Join the Focitech ecosystem</p>
+            <p className="text-slate-400 mt-3 font-medium text-lg">Join the Focitech</p>
           </div>
 
           {error && (
