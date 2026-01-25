@@ -477,10 +477,10 @@ const Feedback = () => {
               <a href='/contact'>
                 Start Your Project</a>
               </button>
-              <button className="px-8 py-4 border border-white/10 hover:bg-white/5 rounded-2xl font-bold text-lg transition-all hover:scale-[1.02]">
+              {/* <button className="px-8 py-4 border border-white/10 hover:bg-white/5 rounded-2xl font-bold text-lg transition-all hover:scale-[1.02]">
                 View Case Studies
                 <ExternalLink className="inline ml-2 w-5 h-5" />
-              </button>
+              </button> */}
             </div>
           </div>
         </div>
