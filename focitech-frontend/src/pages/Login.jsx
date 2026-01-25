@@ -54,7 +54,7 @@ const Login = () => {
               <LogIn className="text-white w-10 h-10" />
             </motion.div>
             <h1 className="text-4xl font-black text-white tracking-tight leading-none">Welcome Back</h1>
-            <p className="text-slate-400 mt-4 font-medium text-lg italic">Continue your TechnoviaX journey</p>
+            <p className="text-slate-400 mt-4 font-medium text-lg italic">Continue your Tech journey</p>
           </div>
 
           <AnimatePresence mode="wait">
@@ -132,7 +132,7 @@ const Login = () => {
         <div className="flex items-center justify-center gap-2 mt-10">
            <ShieldCheck size={14} className="text-slate-600" />
            <p className="text-center text-slate-600 text-[10px] uppercase tracking-[0.4em] font-black">
-             TechnoviaX Security Protocol L-3
+             TechnoviaX Security Protocol
            </p>
         </div>
       </motion.div>
