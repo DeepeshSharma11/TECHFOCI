@@ -116,59 +116,82 @@ const Navbar = () => {
       </div>
 
       {/* --- MOBILE DRAWER (Scrollable & No Overlap) --- */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div 
-            initial={{ opacity: 0, x: '100%' }} 
-            animate={{ opacity: 1, x: 0 }} 
-            exit={{ opacity: 0, x: '100%' }}
-            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="lg:hidden fixed inset-0 bg-[#020617] z-[105] flex flex-col p-8 pt-28 overflow-y-auto"
+      {/* --- MOBILE DRAWER (Scrollable & No Overlap) --- */}
+<AnimatePresence>
+  {isOpen && (
+    <motion.div 
+      initial={{ opacity: 0, x: '100%' }} 
+      animate={{ opacity: 1, x: 0 }} 
+      exit={{ opacity: 0, x: '100%' }}
+      transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+      className="lg:hidden fixed inset-0 bg-[#020617] z-[105] flex flex-col p-6 pt-24 overflow-y-auto"
+    >
+      {/* Nav Links */}
+      <div className="flex flex-col space-y-3 mb-8">
+        <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.4em] px-2 mb-2">Menu</p>
+        {navLinks.map((link) => (
+          <Link
+            key={link.name} 
+            to={link.path}
+            className={`flex justify-between items-center p-4 rounded-xl text-lg font-bold border border-white/5 transition-all ${
+              location.pathname === link.path 
+                ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' 
+                : 'bg-white/5 text-slate-300 hover:bg-white/10'
+            }`}
+            onClick={() => setIsOpen(false)}
           >
-            {/* Nav Links */}
-            <div className="flex flex-col space-y-4 mb-10">
-              <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.4em] px-2"></p>
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name} to={link.path}
-                  className={`flex justify-between items-center p-5 rounded-2xl text-2xl font-black italic tracking-tighter border border-white/5 transition-all ${
-                    location.pathname === link.path ? 'bg-blue-600 text-white shadow-xl shadow-blue-600/20' : 'bg-white/5 text-slate-300'
-                  }`}
-                >
-                  {link.name}
-                  <ChevronRight size={20} className={location.pathname === link.path ? 'text-white' : 'opacity-20'} />
-                </Link>
-              ))}
-            </div>
+            <span className="flex-1">{link.name}</span>
+            <ChevronRight size={18} className={location.pathname === link.path ? 'text-white' : 'opacity-30'} />
+          </Link>
+        ))}
+      </div>
 
-            {/* Account Controls */}
-            <div className="mt-auto pb-10 flex flex-col space-y-6">
-              <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.4em] px-2">Account Management</p>
-              {user ? (
-                <div className="flex flex-col space-y-3">
-                  <div className="grid grid-cols-2 gap-3">
-                    <Link to="/profile" className="flex items-center justify-center gap-2 bg-white/5 py-4 rounded-xl text-[11px] font-black uppercase border border-white/10 text-white">
-                      <UserIcon size={16} /> Profile
-                    </Link>
-                    <button onClick={handleLogout} className="flex items-center justify-center gap-2 bg-red-500/10 text-red-500 py-4 rounded-xl text-[11px] font-black uppercase border border-red-500/20">
-                      <LogOut size={16} /> Logout
-                    </button>
-                  </div>
-                  {isAdmin && (
-                    <Link to="/admin" className="w-full text-center bg-amber-500/10 text-amber-500 py-4 rounded-xl font-bold border border-amber-500/20 text-[11px] uppercase tracking-[0.2em] shadow-lg shadow-amber-500/10">
-                      <ShieldCheck size={16} className="inline mr-2" /> Admin Command Center
-                    </Link>
-                  )}
-                </div>
-              ) : (
-                <Link to="/login" className="w-full text-center bg-blue-600 text-white py-5 rounded-xl font-black text-xs tracking-[0.2em] uppercase shadow-xl shadow-blue-600/30">
-                  Log In To System
-                </Link>
-              )}
+      {/* Account Controls */}
+      <div className="mt-auto pb-8 flex flex-col space-y-4">
+        <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.4em] px-2 mb-1">Account</p>
+        {user ? (
+          <div className="flex flex-col space-y-3">
+            <div className="grid grid-cols-2 gap-3">
+              <Link 
+                to="/profile" 
+                className="flex items-center justify-center gap-2 bg-white/5 py-3 rounded-lg text-xs font-bold uppercase border border-white/10 text-white hover:bg-white/10 transition-colors"
+                onClick={() => setIsOpen(false)}
+              >
+                <UserIcon size={14} /> Profile
+              </Link>
+              <button 
+                onClick={() => {
+                  handleLogout();
+                  setIsOpen(false);
+                }} 
+                className="flex items-center justify-center gap-2 bg-red-500/10 text-red-500 py-3 rounded-lg text-xs font-bold uppercase border border-red-500/20 hover:bg-red-500/20 transition-colors"
+              >
+                <LogOut size={14} /> Logout
+              </button>
             </div>
-          </motion.div>
+            {isAdmin && (
+              <Link 
+                to="/admin" 
+                className="w-full text-center bg-amber-500/10 text-amber-500 py-3 rounded-lg font-bold border border-amber-500/20 text-xs uppercase tracking-wider hover:bg-amber-500/20 transition-colors"
+                onClick={() => setIsOpen(false)}
+              >
+                <ShieldCheck size={14} className="inline mr-2" /> Admin
+              </Link>
+            )}
+          </div>
+        ) : (
+          <Link 
+            to="/login" 
+            className="w-full text-center bg-blue-600 text-white py-3.5 rounded-lg font-bold text-sm tracking-wider uppercase hover:bg-blue-500 transition-colors shadow-lg shadow-blue-600/30"
+            onClick={() => setIsOpen(false)}
+          >
+            Sign In
+          </Link>
         )}
-      </AnimatePresence>
+      </div>
+    </motion.div>
+  )}
+</AnimatePresence>
     </nav>
   );
 };
