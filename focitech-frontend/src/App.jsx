@@ -20,6 +20,7 @@ import OurBusiness from './pages/OurBusiness';
 import Careers from './pages/Careers';
 import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
+import Feedback from './pages/Feedback';
 
 // --- ADVANCED PROTECTED ROUTE COMPONENT ---
 // Yeh component check karta hai ki user logged in hai ya nahi
@@ -56,6 +57,7 @@ function AppRoutes() {
           <Route path="/careers" element={<Careers />} />
           <Route path="/privacy" element={<Privacy />} />
          <Route path="/terms" element={<Terms />} />
+          <Route path="/feedback" element={<Feedback />} />
 
 
           {/* --- Auth Routes --- */}

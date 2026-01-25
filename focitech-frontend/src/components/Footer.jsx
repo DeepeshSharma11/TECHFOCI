@@ -164,6 +164,15 @@ const Footer = () => {
                   Focifinance
                 </a>
               </li>
+              <li>
+                <a 
+                  href="/Feedback" 
+                  rel="noopener noreferrer"
+                  className="text-sm font-medium hover:text-blue-500 transition-colors duration-300 inline-block py-1"
+                >
+                  Feedback
+                </a>
+              </li>
             </ul>
           </div>
 
