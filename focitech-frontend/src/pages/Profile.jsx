@@ -185,7 +185,7 @@ const Profile = () => {
                 onClick={logout}
                 className="w-full md:w-auto flex items-center justify-center gap-3 text-red-500 hover:text-white hover:bg-red-500 font-black text-[10px] uppercase tracking-[0.2em] px-8 py-4 rounded-2xl transition-all border border-red-500/20"
               >
-                <LogOut size={16} /> Terminate Session
+                <LogOut size={16} /> Logout
               </button>
               
               <div className="flex items-center gap-2 text-[10px] font-black text-slate-600 uppercase tracking-widest">
