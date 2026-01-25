@@ -73,7 +73,7 @@ const Login = () => {
           <form onSubmit={handleLogin} className="space-y-6">
             {/* Email Field */}
             <div className="space-y-2">
-              <label className="text-sm font-bold text-slate-400 ml-2 uppercase tracking-widest">Email Node</label>
+              <label className="text-sm font-bold text-slate-400 ml-2 uppercase tracking-widest">Enter Email</label>
               <div className="relative group">
                 <Mail className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-blue-500 transition-colors" size={20} />
                 <input
@@ -89,8 +89,8 @@ const Login = () => {
             {/* Password Field */}
             <div className="space-y-2">
               <div className="flex justify-between items-center ml-2">
-                <label className="text-sm font-bold text-slate-400 uppercase tracking-widest">Access Key</label>
-                <Link to="/forgot-password" size="sm" className="text-xs text-blue-500 hover:text-blue-400 transition-colors font-bold">RECOVER KEY</Link>
+                <label className="text-sm font-bold text-slate-400 uppercase tracking-widest">Password</label>
+                <Link to="/forgot-password" size="sm" className="text-xs text-blue-500 hover:text-blue-400 transition-colors font-bold">Forget Password</Link>
               </div>
               <div className="relative group">
                 <Lock className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-blue-500 transition-colors" size={20} />
@@ -116,7 +116,7 @@ const Login = () => {
                   AUTHENTICATING...
                 </>
               ) : (
-                <>INITIATE SESSION <ArrowRight size={20} /></>
+                <>Submit <ArrowRight size={20} /></>
               )}
             </motion.button>
           </form>
