@@ -70,9 +70,9 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { icon: <Cpu />, title: "Full-Stack Mastery", desc: "Crafting robust architectures using FastAPI, React, and Supabase.", color: "from-blue-600 to-cyan-500" },
-              { icon: <Shield />, title: "Enterprise Security", desc: "Advanced JWT authentication and encrypted data management.", color: "from-indigo-600 to-purple-500" },
-              { icon: <Layers />, title: "Scalable Design", desc: "Modular codebases built for rapid growth and high traffic.", color: "from-emerald-600 to-teal-500" }
+              { icon: <Cpu />, title: "Planning & Strategy", desc: "Crafting innovative solutions for the tech world. Our expert team combines seamless design and strategic planning to revolutionize your digital landscape. Let us elevate your vision to new heights.", color: "from-blue-600 to-cyan-500" },
+              { icon: <Shield />, title: "Android App", desc: "Crafting cutting-edge Android experiences on a budget. We excel in app development and extending existing applications. Quality meets affordability, as we strive to deliver top-notch solutions tailored to your needs. Let's create something extraordinary together!", color: "from-indigo-600 to-purple-500" },
+              { icon: <Layers />, title: "Web Design & Development", desc: "Crafting digital experiences that leave a lasting impression. We are Foci Tech, your go-to web development experts dedicated to building top-notch websites with a keen eye for design and functionality. From creation to maintenance, we've got you covered.", color: "from-emerald-600 to-teal-500" }
             ].map((item, i) => (
               <motion.div 
                 key={i}
