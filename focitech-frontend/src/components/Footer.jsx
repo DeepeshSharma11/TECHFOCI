@@ -1,4 +1,4 @@
-import { Laptop, Facebook, Twitter, Linkedin, Mail, ArrowRight, Instagram, Globe } from 'lucide-react';
+import { Laptop, Facebook, Twitter, Linkedin,Youtube, Mail, ArrowRight, Instagram, Globe } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Footer = () => {
@@ -38,7 +38,7 @@ const Footer = () => {
               We create powerful digital solutions for businesses. We help turn ideas into working software.
             </p>
             <div className="flex gap-3 pt-2">
-              <a
+              {/* <a
                 href="https://facebook.com"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -46,17 +46,17 @@ const Footer = () => {
                 aria-label="Visit our Facebook page"
               >
                 <Facebook size={18} />
-              </a>
+              </a> */}
               <a
-                href="https://twitter.com"
+                href="https://youtube.com/@thefocitech?feature=shared"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2.5 bg-white/5 rounded-xl hover:bg-sky-500 hover:text-white transition-all duration-300 hover:scale-110"
-                aria-label="Visit our Twitter page"
+                aria-label="Visit our Youtube page"
               >
-                <Twitter size={18} />
+                <Youtube size={18} />
               </a>
-              <a
+              {/* <a
                 href="https://linkedin.com"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -64,9 +64,9 @@ const Footer = () => {
                 aria-label="Visit our LinkedIn page"
               >
                 <Linkedin size={18} />
-              </a>
+              </a> */}
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/thefocitech?igsh=azA5ZjM5ZHAyOXEz"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2.5 bg-white/5 rounded-xl hover:bg-pink-600 hover:text-white transition-all duration-300 hover:scale-110"
