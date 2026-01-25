@@ -179,7 +179,7 @@ const Footer = () => {
                     href="mailto:info@focitech.in" 
                     className="text-sm hover:text-blue-500 transition-colors duration-300"
                   >
-                    info@focitech.in
+                    info.technoviax@gmail.com
                   </a>
                 </div>
               </div>
@@ -188,7 +188,7 @@ const Footer = () => {
                 <div>
                   <span className="text-sm font-medium block">Location</span>
                   <span className="text-sm">
-                    Bareilly, Uttar Pradesh<br />India - 243001
+                    Bareilly, Uttar Pradesh<br />India - 243122
                   </span>
                 </div>
               </div>
