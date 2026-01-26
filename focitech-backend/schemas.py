@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, validator  # ADDED validator here
 from typing import List, Optional
 from datetime import datetime
 from enum import Enum
@@ -110,3 +110,123 @@ class TeamMemberRead(TeamMemberBase):
 
     class Config:
         from_attributes = True
+
+
+# --- Careers MODELS ---
+class JobType(str, Enum):
+    FULL_TIME = "full-time"
+    PART_TIME = "part-time"
+    CONTRACT = "contract"
+    INTERNSHIP = "internship"
+    REMOTE = "remote"
+    HYBRID = "hybrid"
+
+class ApplicationStatus(str, Enum):
+    PENDING = "pending"
+    REVIEWING = "reviewing"
+    SHORTLISTED = "shortlisted"
+    REJECTED = "rejected"
+    HIRED = "hired"
+
+# Job Schemas
+class JobBase(BaseModel):
+    title: str
+    department: str
+    location: str
+    job_type: JobType = JobType.FULL_TIME
+    salary_range: Optional[str] = None
+    experience_required: str
+    education_required: Optional[str] = None
+    description: str
+    requirements: str
+    benefits: Optional[str] = None
+    is_active: bool = True
+    application_deadline: Optional[datetime] = None
+
+class JobCreate(JobBase):
+    pass
+
+class JobUpdate(BaseModel):
+    title: Optional[str] = None
+    department: Optional[str] = None
+    location: Optional[str] = None
+    job_type: Optional[JobType] = None
+    salary_range: Optional[str] = None
+    experience_required: Optional[str] = None
+    education_required: Optional[str] = None
+    description: Optional[str] = None
+    requirements: Optional[str] = None
+    benefits: Optional[str] = None
+    is_active: Optional[bool] = None
+    application_deadline: Optional[datetime] = None
+
+class JobInDB(JobBase):
+    id: int
+    created_at: datetime
+    updated_at: Optional[datetime] = None
+    applications_count: Optional[int] = 0
+    
+    class Config:
+        from_attributes = True
+
+# Application Schemas
+class ApplicationBase(BaseModel):
+    name: str
+    email: EmailStr
+    phone: Optional[str] = None
+    cover_letter: Optional[str] = None
+    portfolio_url: Optional[str] = None
+    source: Optional[str] = "Company Website"
+    job_id: int
+    
+    @validator('phone')
+    def validate_phone(cls, v):
+        if v and not v.replace('+', '').replace(' ', '').replace('-', '').replace('(', '').replace(')', '').isdigit():
+            raise ValueError('Invalid phone number')
+        return v
+
+class ApplicationCreate(ApplicationBase):
+    pass
+
+class ApplicationUpdate(BaseModel):
+    status: Optional[ApplicationStatus] = None
+    internal_notes: Optional[str] = None
+
+class ApplicationInDB(ApplicationBase):
+    id: int
+    job_title: str
+    job_department: str
+    job_type: str
+    resume_filename: str
+    status: ApplicationStatus = ApplicationStatus.PENDING
+    internal_notes: Optional[str] = None
+    applied_at: datetime
+    status_updated_at: Optional[datetime] = None
+    
+    class Config:
+        from_attributes = True
+
+# Response Schemas
+class JobResponse(JobInDB):
+    pass
+
+class ApplicationResponse(ApplicationInDB):
+    pass
+
+class ApplicationWithJob(ApplicationResponse):
+    job: Optional[JobInDB] = None
+
+class JobWithApplications(JobResponse):
+    applications: List[ApplicationResponse] = []
+
+# Stats Schemas
+class CareerStats(BaseModel):
+    total_jobs: int
+    active_jobs: int
+    total_applications: int
+    pending_applications: int
+    hired_applications: int
+    average_time_to_hire: Optional[str] = None
+    application_status_distribution: dict
+    department_distribution: dict
+    top_performing_jobs: List[dict]
