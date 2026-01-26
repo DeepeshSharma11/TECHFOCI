@@ -16,8 +16,8 @@ class ProjectBase(BaseModel):
     description: str = Field(..., min_length=10, max_length=5000)
     tech_stack: List[str] = Field(default_factory=list)
     image_url: Optional[str] = None
-    live_url: Optional[str] = None  # Changed from live_link
-    github_url: Optional[str] = None  # Changed from github_link
+    live_url: Optional[str] = None  
+    github_url: Optional[str] = None  
     
     @validator('tech_stack')
     def validate_tech_stack(cls, v):
@@ -60,7 +60,7 @@ class TeamMemberBase(BaseModel):
     name: str = Field(..., min_length=2, max_length=100)
     role: str = Field(..., min_length=2, max_length=100)
     bio: Optional[str] = Field(None, max_length=1000)
-    image_url: Optional[str] = None  # Changed from photo_url
+    image_url: Optional[str] = None  
     github_url: Optional[str] = None
     linkedin_url: Optional[str] = None
     twitter_url: Optional[str] = None

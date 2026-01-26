@@ -22,7 +22,7 @@ class UserCreate(UserBase):
     password: str = Field(..., min_length=8)
 
 class UserRead(UserBase):
-    id: str  # Updated to string as Supabase uses UUID strings
+    id: str  
     is_active: bool = True
     created_at: datetime
 
@@ -38,7 +38,6 @@ class Token(BaseModel):
 class InquiryBase(BaseModel):
     name: str = Field(..., min_length=2, max_length=100)
     email: EmailStr
-    # FIXED: Made subject required to match database column requirements
     subject: str = Field(..., min_length=3, max_length=200) 
     message: str = Field(..., min_length=2, max_length=2000)
 
@@ -61,7 +60,7 @@ class InquiryRead(InquiryBase):
 class ProjectBase(BaseModel):
     title: str = Field(..., min_length=3)
     description: str = Field(..., min_length=20)
-    tech_stack: List[str] = Field(default_factory=list) # Critical for your 422 fix
+    tech_stack: List[str] = Field(default_factory=list) 
     image_url: Optional[str] = None
     live_url: Optional[str] = None
     github_url: Optional[str] = None
