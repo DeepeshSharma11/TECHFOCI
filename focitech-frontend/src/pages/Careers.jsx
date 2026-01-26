@@ -50,22 +50,23 @@ const Careers = () => {
   }, [filters, jobOpenings]);
 
   const fetchJobOpenings = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch(`${API_BASE_URL}/careers/openings`);
-      if (!response.ok) throw new Error('Failed to fetch job openings');
-      const data = await response.json();
-      setJobOpenings(data);
-      setFilteredJobs(data);
-    } catch (error) {
-      console.error('Error fetching job openings:', error);
-      // Fallback to static data if API fails
-      setJobOpenings(staticJobOpenings);
-      setFilteredJobs(staticJobOpenings);
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    setLoading(true);
+    // This will now call: http://localhost:8000/api/v1/careers/openings
+    const response = await fetch(`${API_BASE_URL}/careers/openings`);
+    if (!response.ok) throw new Error('Failed to fetch job openings');
+    const data = await response.json();
+    setJobOpenings(data);
+    setFilteredJobs(data);
+  } catch (error) {
+    console.error('Error fetching job openings:', error);
+    // Fallback to static data if API fails
+    setJobOpenings(staticJobOpenings);
+    setFilteredJobs(staticJobOpenings);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const filterJobs = () => {
     let filtered = [...jobOpenings];
@@ -169,11 +170,11 @@ const Careers = () => {
       formData.append('resume', applicationForm.resume);
 
       // Send to FastAPI backend
+      // In handleSubmitApplication function:
       const response = await fetch(`${API_BASE_URL}/careers/apply`, {
-        method: 'POST',
+         method: 'POST',
         body: formData,
       });
-
       const data = await response.json();
 
       if (!response.ok) {
