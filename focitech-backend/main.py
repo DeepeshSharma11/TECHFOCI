@@ -10,7 +10,7 @@ from contextlib import asynccontextmanager
 
 # Centralized settings and modular routers
 from core.config import settings
-from routers import projects, inquiries, team, auth
+from routers import projects, inquiries, team, auth, careers  # ADDED careers import
 
 
 # --- Setup Production Logging ---
@@ -68,8 +68,8 @@ app.add_middleware(
         "localhost", 
         "127.0.0.1", 
         "focitech.site",
-        "www.focitech.site"
-        "techfoci.onrender.com", # Update with your Render subdomain
+        "www.focitech.site",
+        "techfoci.onrender.com", 
         "*.onrender.com", 
         "*.netlify.app"
     ]
@@ -110,7 +110,7 @@ app.include_router(auth, prefix="/api/v1/auth", tags=["Authentication"])
 app.include_router(projects.router if hasattr(projects, 'router') else projects, prefix="/api/v1/portfolio", tags=["Projects"])
 app.include_router(inquiries.router if hasattr(inquiries, 'router') else inquiries, prefix="/api/v1/contact", tags=["Inquiries"])
 app.include_router(team.router if hasattr(team, 'router') else team, prefix="/api/v1/corporate", tags=["Team"])
-# app.include_router(Careers.router, prefix="/api/v1/careers", tags=["Careers"])
+app.include_router(careers.router if hasattr(careers, 'router') else careers, prefix="/api/v1/careers", tags=["Careers"])  # FIXED careers router
 
 @app.get("/", tags=["Health"])
 async def root():
