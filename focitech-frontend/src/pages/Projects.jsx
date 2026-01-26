@@ -49,7 +49,7 @@ const Projects = () => {
         <div className="h-24 w-24 border-t-4 border-blue-600 rounded-full animate-spin"></div>
         <Layers className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-blue-500 animate-pulse" size={30} />
       </div>
-      <p className="mt-8 text-slate-500 font-black tracking-[0.5em] text-[10px] uppercase">Retrieving Blueprints</p>
+      <p className="mt-8 text-slate-500 font-black tracking-[0.5em] text-[10px] uppercase">Retrieving Projects</p>
     </div>
   );
 
