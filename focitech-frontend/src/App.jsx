@@ -7,6 +7,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 
 // Page Components
+
 import Home from './pages/Home';
 import Projects from './pages/Projects';
 import Team from './pages/Team';
@@ -16,6 +17,7 @@ import Signup from './pages/Signup';
 import Profile from './pages/Profile';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminInquiries from './pages/AdminInquiries';
+// import AdminCareers from './pages/AdminCareers';
 import OurBusiness from './pages/OurBusiness';
 import Careers from './pages/Careers';
 import Privacy from './pages/Privacy';
@@ -23,7 +25,6 @@ import Terms from './pages/Terms';
 import Feedback from './pages/Feedback';
 
 // --- ADVANCED PROTECTED ROUTE COMPONENT ---
-// Yeh component check karta hai ki user logged in hai ya nahi
 const ProtectedRoute = ({ children, adminOnly = false }) => {
   const { user, isAdmin, loading } = useAuth();
 
@@ -35,10 +36,19 @@ const ProtectedRoute = ({ children, adminOnly = false }) => {
 
   if (!user) return <Navigate to="/login" />;
 
-  // Agar route sirf Admin ke liye hai aur user admin nahi hai
   if (adminOnly && !isAdmin) return <Navigate to="/profile" />;
 
   return children;
+};
+
+// Admin Layout Component
+const AdminLayout = ({ children }) => {
+  return (
+    <div className="flex flex-col min-h-screen bg-[#020617]">
+      <Navbar />
+      {children}
+    </div>
+  );
 };
 
 function AppRoutes() {
@@ -46,7 +56,7 @@ function AppRoutes() {
     <div className="flex flex-col min-h-screen bg-[#020617] selection:bg-blue-500/30 selection:text-white">
       <Navbar />
       
-      <main className="flex-grow pt-20 lg:pt-0"> {/* Padding for fixed Navbar */}
+      <main className="flex-grow">
         <Routes>
           {/* --- Public Routes --- */}
           <Route path="/" element={<Home />} />
@@ -56,9 +66,8 @@ function AppRoutes() {
           <Route path="/our-business" element={<OurBusiness />} />
           <Route path="/careers" element={<Careers />} />
           <Route path="/privacy" element={<Privacy />} />
-         <Route path="/terms" element={<Terms />} />
+          <Route path="/terms" element={<Terms />} />
           <Route path="/feedback" element={<Feedback />} />
-
 
           {/* --- Auth Routes --- */}
           <Route path="/login" element={<Login />} />
@@ -71,22 +80,35 @@ function AppRoutes() {
             </ProtectedRoute>
           } />
 
-          {/* --- Admin Only Routes (TechnoviaX Command Center) --- */}
+          {/* --- Admin Dashboard (Main) --- */}
           <Route path="/admin" element={
             <ProtectedRoute adminOnly={true}>
-              <AdminDashboard />
+              <AdminLayout>
+                <AdminDashboard />
+              </AdminLayout>
             </ProtectedRoute>
           } />
 
+          {/* --- Admin Sub-routes --- */}
           <Route path="/admin/inquiries" element={
             <ProtectedRoute adminOnly={true}>
-              <AdminInquiries />
+              <AdminLayout>
+                <AdminInquiries />
+              </AdminLayout>
             </ProtectedRoute>
           } />
+{/* 
+          <Route path="/admin/careers" element={
+            <ProtectedRoute adminOnly={true}>
+              <AdminLayout>
+                <AdminCareers />
+              </AdminLayout>
+            </ProtectedRoute>
+          } /> */}
 
-          {/* --- 404 Infrastructure --- */}
+          {/* --- 404 Page --- */}
           <Route path="*" element={
-            <div className="min-h-screen flex flex-col items-center justify-center text-center px-6 bg-[#020617]">
+            <div className="min-h-screen flex flex-col items-center justify-center text-center px-6 bg-[#020617] pt-20">
               <h1 className="text-[12rem] font-black text-white/5 leading-none">404</h1>
               <div className="relative -mt-20">
                 <h2 className="text-4xl font-black text-white mb-4 italic">ORBIT LOST</h2>
@@ -101,7 +123,6 @@ function AppRoutes() {
             </div>
           } />
         </Routes>
-        
       </main>
 
       <Footer />
@@ -119,4 +140,5 @@ function App() {
     </AuthProvider>
   );
 }
+
 export default App;
