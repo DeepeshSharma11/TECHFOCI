@@ -22,7 +22,7 @@ async def signup(user_data: UserCreate):
             "options": {
                 "data": {
                     "full_name": user_data.full_name,
-                    "role": "authenticated" # Default role
+                    "role": "authenticated" 
                 }
             }
         })
@@ -36,7 +36,7 @@ async def signup(user_data: UserCreate):
         logger.info(f"🆕 New User Registered: {user_data.email}")
         
         return {
-            "id": 0, # Supabase user IDs are UUID strings, adjust schema if needed
+            "id": 0,
             "email": response.user.email,
             "full_name": user_data.full_name,
             "is_active": True,
