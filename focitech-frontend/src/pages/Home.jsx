@@ -1,7 +1,8 @@
-import { lazy, Suspense, useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, LazyMotion, domAnimation, AnimatePresence } from 'framer-motion';
 import { supabase } from '../supabaseClient';
+import api from '../api/client';
 
 // Lazy load Lucide icons to reduce initial bundle size
 const Rocket = lazy(() => import('lucide-react').then(mod => ({ default: mod.Rocket })));
@@ -27,6 +28,9 @@ const TrendingUp = lazy(() => import('lucide-react').then(mod => ({ default: mod
 const Calendar = lazy(() => import('lucide-react').then(mod => ({ default: mod.Calendar })));
 const CheckCircle = lazy(() => import('lucide-react').then(mod => ({ default: mod.CheckCircle })));
 const Star = lazy(() => import('lucide-react').then(mod => ({ default: mod.Star })));
+const Search = lazy(() => import('lucide-react').then(mod => ({ default: mod.Search })));
+const Code2 = lazy(() => import('lucide-react').then(mod => ({ default: mod.Code2 })));
+const Filter = lazy(() => import('lucide-react').then(mod => ({ default: mod.Filter })));
 
 // Loading fallback for icons
 const IconLoader = ({ children }) => (
@@ -38,6 +42,11 @@ const IconLoader = ({ children }) => (
 const Home = () => {
   const [team, setTeam] = useState([]);
   const [teamLoading, setTeamLoading] = useState(true);
+  const [projects, setProjects] = useState([]);
+  const [projectsLoading, setProjectsLoading] = useState(true);
+  const [projectsError, setProjectsError] = useState(null);
+  const [activeFilter, setActiveFilter] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [filter, setFilter] = useState('all');
   const [hoveredCard, setHoveredCard] = useState(null);
@@ -61,6 +70,21 @@ const Home = () => {
     };
 
     fetchTeam();
+  }, []);
+
+  // Projects data fetch
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await api.get('/portfolio/');
+        setProjects(Array.isArray(response.data) ? response.data : []);
+      } catch (err) {
+        setProjectsError("Our neural network couldn't fetch the portfolio. Please check the backend connection.");
+      } finally {
+        setTimeout(() => setProjectsLoading(false), 600);
+      }
+    };
+    fetchProjects();
   }, []);
 
   // Testimonials data
@@ -171,6 +195,19 @@ const Home = () => {
   const filteredTestimonials = filter === 'all' 
     ? testimonials 
     : testimonials.filter(t => t.category === filter);
+
+  // Filtered projects
+  const filteredProjects = useMemo(() => {
+    return projects.filter(p => {
+      const matchesFilter = activeFilter === 'All' || 
+        (p.tech_stack && Array.isArray(p.tech_stack) && p.tech_stack.includes(activeFilter));
+      const matchesSearch = p.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+        (p.tech_stack && Array.isArray(p.tech_stack) && p.tech_stack.some(t => t.toLowerCase().includes(searchQuery.toLowerCase())));
+      return matchesFilter && matchesSearch;
+    });
+  }, [projects, activeFilter, searchQuery]);
+
+  const categories = ['All', 'React', 'FastAPI', 'Next.js', 'Python', 'Supabase', 'Node.js'];
 
   // Auto-rotate testimonials
   useEffect(() => {
@@ -410,6 +447,206 @@ const Home = () => {
                   </motion.div>
                 ))}
               </div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* --- PROJECTS SECTION --- */}
+        <section className="py-16 sm:py-20 lg:py-24 relative bg-gradient-to-b from-slate-950 to-slate-900">
+          {/* Background Ambience */}
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600/5 rounded-full blur-[120px]"></div>
+          <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-indigo-600/5 rounded-full blur-[120px]"></div>
+
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+            {/* Projects Header */}
+            <motion.div 
+              initial={{ x: -30, opacity: 0 }} 
+              whileInView={{ x: 0, opacity: 1 }}
+              viewport={{ once: true }}
+              className="text-center mb-12 sm:mb-16"
+            >
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold uppercase tracking-widest mb-6">
+                <IconLoader>
+                  <Sparkles size={12} />
+                </IconLoader>
+                TechnoviaX Ecosystem
+              </div>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-6">
+                <span className="text-transparent bg-clip-text bg-gradient-to-b from-blue-400 to-blue-700">Projects</span>
+              </h2>
+              <p className="text-slate-400 text-base sm:text-lg font-medium max-w-2xl mx-auto">
+                Exploring the intersection of performance and aesthetics through custom-engineered software.
+              </p>
+            </motion.div>
+
+            {/* Search Bar */}
+            <div className="relative w-full max-w-md mx-auto mb-12 group">
+              <IconLoader>
+                <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-blue-500 transition-colors" size={20} />
+              </IconLoader>
+              <input 
+                type="text"
+                placeholder="Filter by tech or keyword..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-slate-900/50 border border-white/5 rounded-2xl pl-16 pr-8 py-4 text-white focus:ring-2 focus:ring-blue-500/50 outline-none transition-all backdrop-blur-md"
+              />
+            </div>
+
+            {/* Categories Filter */}
+            <div className="flex flex-wrap justify-center gap-3 mb-12">
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setActiveFilter(cat)}
+                  className={`px-6 py-2.5 rounded-full font-bold text-xs tracking-widest uppercase transition-all duration-300 border ${
+                    activeFilter === cat 
+                    ? 'bg-blue-600 border-blue-500 text-white shadow-xl shadow-blue-600/30 scale-105' 
+                    : 'bg-slate-900/50 border-white/5 text-slate-500 hover:text-white hover:border-white/10'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+
+            {/* Projects Loading State */}
+            {projectsLoading ? (
+              <div className="min-h-[400px] flex flex-col justify-center items-center">
+                <div className="relative">
+                  <div className="h-20 w-20 border-t-4 border-blue-600 rounded-full animate-spin"></div>
+                  <IconLoader>
+                    <Layers className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-blue-500 animate-pulse" size={30} />
+                  </IconLoader>
+                </div>
+                <p className="mt-8 text-slate-500 font-bold tracking-[0.3em] text-xs uppercase">Retrieving Projects</p>
+              </div>
+            ) : projectsError ? (
+              <motion.div 
+                initial={{ opacity: 0 }} 
+                animate={{ opacity: 1 }} 
+                className="text-center py-20 bg-slate-900/20 border border-dashed border-white/10 rounded-3xl"
+              >
+                <IconLoader>
+                  <Code2 className="w-12 h-12 text-slate-700 mx-auto mb-6" />
+                </IconLoader>
+                <h3 className="text-lg font-bold text-slate-500 tracking-wide">{projectsError}</h3>
+              </motion.div>
+            ) : filteredProjects.length === 0 ? (
+              <motion.div 
+                initial={{ opacity: 0 }} 
+                animate={{ opacity: 1 }} 
+                className="text-center py-20 bg-slate-900/20 border border-dashed border-white/10 rounded-3xl"
+              >
+                <IconLoader>
+                  <Code2 className="w-12 h-12 text-slate-700 mx-auto mb-6" />
+                </IconLoader>
+                <h3 className="text-lg font-bold text-slate-500 tracking-wide">No projects found matching these parameters.</h3>
+              </motion.div>
+            ) : (
+              /* Projects Grid */
+              <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                <AnimatePresence mode='popLayout'>
+                  {filteredProjects.slice(0, 6).map((project) => (
+                    <motion.div
+                      layout
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      key={project.id}
+                      whileHover={{ y: -8 }}
+                      className="group relative h-full bg-slate-900/40 border border-white/5 rounded-3xl p-6 hover:bg-slate-900/60 transition-all duration-300 hover:border-blue-500/30"
+                    >
+                      {/* Image Container */}
+                      <div className="relative h-48 rounded-2xl overflow-hidden mb-6 shadow-xl">
+                        <img 
+                          src={project.image_url || 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=1000'} 
+                          alt={project.title} 
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-60"></div>
+                        
+                        {/* Tech Badge */}
+                        {project.tech_stack && project.tech_stack.length > 0 && (
+                          <div className="absolute top-4 right-4 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 text-xs font-bold text-white">
+                            {project.tech_stack[0]}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="space-y-4">
+                        <h3 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors">
+                          {project.title}
+                        </h3>
+                        <p className="text-slate-400 text-sm leading-relaxed line-clamp-2 font-medium">
+                          {project.description}
+                        </p>
+                        
+                        {project.tech_stack && project.tech_stack.length > 0 && (
+                          <div className="flex flex-wrap gap-2 pt-2">
+                            {project.tech_stack.slice(0, 3).map(tech => (
+                              <span key={tech} className="text-xs font-medium text-blue-400 bg-blue-500/5 px-3 py-1 rounded-lg border border-blue-500/10">
+                                {tech}
+                              </span>
+                            ))}
+                            {project.tech_stack.length > 3 && (
+                              <span className="text-xs font-medium text-slate-500 pt-1">
+                                +{project.tech_stack.length - 3}
+                              </span>
+                            )}
+                          </div>
+                        )}
+
+                        <div className="flex gap-3 pt-4">
+                          {project.live_url && (
+                            <a 
+                              href={project.live_url} 
+                              target="_blank" 
+                              rel="noreferrer" 
+                              className="flex-1 bg-white text-blue-600 py-3 rounded-xl font-bold text-xs tracking-widest text-center hover:bg-blue-50 transition flex items-center justify-center gap-2"
+                            >
+                              LIVE DEMO 
+                              <IconLoader>
+                                <ExternalLink size={14} />
+                              </IconLoader>
+                            </a>
+                          )}
+                          {project.github_url && (
+                            <a 
+                              href={project.github_url} 
+                              target="_blank" 
+                              rel="noreferrer" 
+                              className="p-3 bg-slate-800 rounded-xl text-slate-400 hover:text-white border border-white/5 transition-colors"
+                            >
+                              <IconLoader>
+                                <Github size={20} />
+                              </IconLoader>
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              </motion.div>
+            )}
+
+            {/* View All Projects Button */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mt-12"
+            >
+              <Link 
+                to="/projects" 
+                className="inline-flex items-center gap-2 px-8 py-4 bg-slate-900/50 border border-white/5 text-white rounded-2xl font-bold hover:bg-slate-800/50 transition-all hover:scale-[1.02]"
+              >
+                View All Projects
+                <IconLoader>
+                  <ArrowRight size={20} />
+                </IconLoader>
+              </Link>
             </motion.div>
           </div>
         </section>
