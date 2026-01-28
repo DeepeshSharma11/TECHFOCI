@@ -174,7 +174,7 @@ const Team = () => {
       
       {/* Page Footer Label */}
       <p className="text-center text-slate-800 text-[10px] mt-20 uppercase tracking-[0.5em] font-black">
-        Focitech Personnel Infrastructure Node
+        Focitech Personnel Infrastructure
       </p>
     </div>
   );
