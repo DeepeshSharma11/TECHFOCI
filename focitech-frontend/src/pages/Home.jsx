@@ -177,7 +177,7 @@ const Home = () => {
 
   // Stats data
   const stats = [
-    { value: "10+", label: "Projects Delivered", color: "text-blue-400" },
+    { value: "150+", label: "Projects Delivered", color: "text-blue-400" },
     { value: "99%", label: "Client Satisfaction", color: "text-indigo-400" },
     { value: "24/7", label: "Technical Support", color: "text-emerald-400" },
     { value: "98%", label: "Client Retention", color: "text-purple-400" }
