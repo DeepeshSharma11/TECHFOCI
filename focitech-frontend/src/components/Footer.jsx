@@ -20,13 +20,13 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-[#020617] text-slate-400 pt-12 sm:pt-16 md:pt-20 lg:pt-24 pb-6 sm:pb-8 md:pb-12 border-t border-white/5">
+    <footer className="bg-[#020617] text-slate-400 pt-12 sm:pt-16 md:pt-20 lg:pt-24 pb-6 sm:pb-8 md:pb-12 border-t border-white/5 relative z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 md:gap-12 lg:gap-16 mb-8 sm:mb-12 md:mb-16 lg:mb-20">
           
           {/* Company Info */}
           <div className="space-y-3 sm:space-y-4 md:space-y-6">
-            <Link to="/" className="flex items-center gap-2 sm:gap-3 group w-fit relative z-[110]">
+            <Link to="/" className="flex items-center gap-2 sm:gap-3 group w-fit">
               <div className="relative w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center">
                 <div className="absolute inset-0 bg-gradient-to-tr from-emerald-600 to-emerald-400 rounded-lg sm:rounded-xl rotate-6 transition-all duration-500 group-hover:rotate-0 group-hover:scale-110 shadow-lg shadow-emerald-500/20"></div>
                 
@@ -40,6 +40,7 @@ const Footer = () => {
                       e.target.style.display = 'none';
                       e.target.nextSibling.style.display = 'flex';
                     }}
+                    loading="lazy"
                   />
                   {/* Fallback styled "F" if image fails to load */}
                   <div className="hidden absolute inset-0 items-center justify-center font-black text-white text-base sm:text-xl italic">F</div>
@@ -85,7 +86,7 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Quick Links - Aapke original paths maintain */}
+          {/* Quick Links */}
           <div>
             <h4 className="text-white font-bold uppercase text-xs mb-4 sm:mb-6 md:mb-8">Quick Links</h4>
             <ul className="space-y-2 sm:space-y-3 md:space-y-4">
@@ -132,7 +133,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* More Links - Aapke original paths maintain */}
+          {/* More Links */}
           <div>
             <h4 className="text-white font-bold uppercase text-xs mb-4 sm:mb-6 md:mb-8">More</h4>
             <ul className="space-y-2 sm:space-y-3 md:space-y-4">
