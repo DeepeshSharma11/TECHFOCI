@@ -26,14 +26,41 @@ const Footer = () => {
           
           {/* Company Info */}
           <div className="space-y-4 md:space-y-6">
-            <Link to="/" className="flex items-center gap-3 group w-fit">
-              <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-600/20 group-hover:rotate-6 transition-transform duration-300">
-                <Laptop className="text-white" size={20} />
-              </div>
-              <span className="text-2xl font-black text-white italic tracking-tighter">
-                FOCI<span className="text-blue-500">TECH</span>
-              </span>
-            </Link>
+         <Link to="/" className="flex items-center gap-3 group w-fit relative z-[110]">
+      {/* --- LOGO ICON CONTAINER --- */}
+      <div className="relative w-10 h-10 flex items-center justify-center">
+        {/* Emerald Gradient Background / Border Glow */}
+        <div className="absolute inset-0 bg-gradient-to-tr from-emerald-600 to-emerald-400 rounded-xl rotate-6 transition-all duration-500 group-hover:rotate-0 group-hover:scale-110 shadow-lg shadow-emerald-500/20"></div>
+        
+        {/* Actual Image Logo */}
+        <div className="relative z-10 w-full h-full p-1 flex items-center justify-center">
+          <img 
+            src="/Foci-Tech Fav.jpeg" 
+            alt="FociTech Logo" 
+            className="w-full h-full object-cover rounded-lg shadow-sm transition-transform duration-500 group-hover:scale-105"
+            onError={(e) => {
+              // Fallback logic
+              e.target.style.display = 'none';
+              e.target.nextSibling.style.display = 'flex';
+            }}
+          />
+          {/* Fallback styled "F" if image fails to load */}
+          <div className="hidden absolute inset-0 items-center justify-center font-black text-white text-xl italic">F</div>
+        </div>
+        
+        {/* Decorative Ring */}
+        <div className="absolute inset-0 border-2 border-white/10 rounded-xl -rotate-3 group-hover:rotate-0 transition-transform duration-500 pointer-events-none"></div>
+      </div>
+
+      {/* --- BRAND TEXT --- */}
+      <div className="flex flex-col">
+        <span className="text-2xl font-black tracking-tighter uppercase italic leading-none">
+          <span className="text-emerald-500 transition-colors duration-300 group-hover:text-emerald-400">FOCI</span>
+          <span className="text-blue-500">TECH</span>
+        </span>
+        <span className="text-[7px] font-bold text-slate-500 tracking-[0.4em] uppercase mt-1">Innovating Future</span>
+      </div>
+    </Link>
             <p className="text-sm leading-relaxed font-medium text-slate-400 max-w-xs">
               We create powerful digital solutions for businesses. We help turn ideas into working software.
             </p>
