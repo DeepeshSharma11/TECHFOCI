@@ -1,12 +1,9 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
-// Layout Components
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-
-// Page Components
+import ScrollToTop from './components/ScrollToTop';
 
 import Home from './pages/Home';
 import Projects from './pages/Projects';
@@ -17,14 +14,12 @@ import Signup from './pages/Signup';
 import Profile from './pages/Profile';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminInquiries from './pages/AdminInquiries';
-// import AdminCareers from './pages/AdminCareers';
 import OurBusiness from './pages/OurBusiness';
 import Careers from './pages/Careers';
 import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
 import Feedback from './pages/Feedback';
 
-// --- ADVANCED PROTECTED ROUTE COMPONENT ---
 const ProtectedRoute = ({ children, adminOnly = false }) => {
   const { user, isAdmin, loading } = useAuth();
 
@@ -41,7 +36,6 @@ const ProtectedRoute = ({ children, adminOnly = false }) => {
   return children;
 };
 
-// Admin Layout Component
 const AdminLayout = ({ children }) => {
   return (
     <div className="flex flex-col min-h-screen bg-[#020617]">
@@ -58,7 +52,6 @@ function AppRoutes() {
       
       <main className="flex-grow">
         <Routes>
-          {/* --- Public Routes --- */}
           <Route path="/" element={<Home />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/team" element={<Team />} />
@@ -69,18 +62,15 @@ function AppRoutes() {
           <Route path="/terms" element={<Terms />} />
           <Route path="/feedback" element={<Feedback />} />
 
-          {/* --- Auth Routes --- */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
 
-          {/* --- User Protected Routes --- */}
           <Route path="/profile" element={
             <ProtectedRoute>
               <Profile />
             </ProtectedRoute>
           } />
 
-          {/* --- Admin Dashboard (Main) --- */}
           <Route path="/admin" element={
             <ProtectedRoute adminOnly={true}>
               <AdminLayout>
@@ -89,7 +79,6 @@ function AppRoutes() {
             </ProtectedRoute>
           } />
 
-          {/* --- Admin Sub-routes --- */}
           <Route path="/admin/inquiries" element={
             <ProtectedRoute adminOnly={true}>
               <AdminLayout>
@@ -97,16 +86,7 @@ function AppRoutes() {
               </AdminLayout>
             </ProtectedRoute>
           } />
-{/* 
-          <Route path="/admin/careers" element={
-            <ProtectedRoute adminOnly={true}>
-              <AdminLayout>
-                <AdminCareers />
-              </AdminLayout>
-            </ProtectedRoute>
-          } /> */}
 
-          {/* --- 404 Page --- */}
           <Route path="*" element={
             <div className="min-h-screen flex flex-col items-center justify-center text-center px-6 bg-[#020617] pt-20">
               <h1 className="text-[12rem] font-black text-white/5 leading-none">404</h1>
@@ -130,11 +110,11 @@ function AppRoutes() {
   );
 }
 
-// Final App Wrapper with Context
 function App() {
   return (
     <AuthProvider>
       <Router>
+        <ScrollToTop />
         <AppRoutes />
       </Router>
     </AuthProvider>
