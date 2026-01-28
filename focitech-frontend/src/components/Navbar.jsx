@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Menu, X, LogOut, User as UserIcon, ShieldCheck, ChevronRight
 } from 'lucide-react';
@@ -9,11 +8,13 @@ import {
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isDrawerVisible, setIsDrawerVisible] = useState(false);
   
   const { user, isAdmin, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const menuRef = useRef(null);
+  const drawerRef = useRef(null);
 
   // Background change on scroll logic
   useEffect(() => {
@@ -25,7 +26,30 @@ const Navbar = () => {
   // Close menu on navigation
   useEffect(() => { 
     setIsOpen(false); 
+    setIsDrawerVisible(false);
   }, [location.pathname]);
+
+  // Handle drawer animation
+  useEffect(() => {
+    if (isOpen) {
+      // First show the drawer, then trigger animation
+      setIsDrawerVisible(true);
+      // Small timeout to ensure DOM is updated
+      setTimeout(() => {
+        if (drawerRef.current) {
+          drawerRef.current.style.transform = 'translateX(0)';
+        }
+      }, 10);
+    } else {
+      if (drawerRef.current) {
+        drawerRef.current.style.transform = 'translateX(100%)';
+        // Wait for animation to complete before hiding
+        setTimeout(() => {
+          setIsDrawerVisible(false);
+        }, 300);
+      }
+    }
+  }, [isOpen]);
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -122,10 +146,7 @@ const Navbar = () => {
                   >
                     {link.name}
                     {location.pathname === link.path && (
-                      <motion.span 
-                        layoutId="nav-line" 
-                        className="absolute bottom-0 left-3 xl:left-4 right-3 xl:right-4 h-0.5 bg-blue-500 rounded-full" 
-                      />
+                      <span className="absolute bottom-0 left-3 xl:left-4 right-3 xl:right-4 h-0.5 bg-blue-500 rounded-full"></span>
                     )}
                   </Link>
                 ))}
@@ -139,7 +160,7 @@ const Navbar = () => {
                       className="p-1.5 xl:p-2 text-slate-400 hover:text-blue-500 transition-colors"
                       aria-label="Profile"
                     >
-                      <UserIcon size={18} xl:size={20} />
+                      <UserIcon size={18} />
                     </Link>
                     {isAdmin && (
                       <Link 
@@ -147,7 +168,7 @@ const Navbar = () => {
                         className="p-1.5 xl:p-2 text-amber-500 hover:scale-110 transition-all"
                         aria-label="Admin Dashboard"
                       >
-                        <ShieldCheck size={16} xl:size={18} />
+                        <ShieldCheck size={16} />
                       </Link>
                     )}
                     <button 
@@ -155,7 +176,7 @@ const Navbar = () => {
                       className="p-1.5 xl:p-2 text-red-500/80 hover:text-red-500 transition-all"
                       aria-label="Logout"
                     >
-                      <LogOut size={16} xl:size={18} />
+                      <LogOut size={16} />
                     </button>
                   </div>
                 ) : (
@@ -176,112 +197,107 @@ const Navbar = () => {
                 className="p-2 text-white bg-white/5 border border-white/10 rounded-lg"
                 aria-label={isOpen ? "Close menu" : "Open menu"}
               >
-                {isOpen ? <X size={20} sm:size={24} /> : <Menu size={20} sm:size={24} />}
+                {isOpen ? <X size={20} /> : <Menu size={20} />}
               </button>
             </div>
           </div>
         </div>
       </nav>
 
-      {/* --- MOBILE DRAWER (Fixed z-index issue) --- */}
-      <AnimatePresence>
-        {isOpen && (
-          <>
-            {/* Overlay */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[99] lg:hidden"
-              onClick={() => setIsOpen(false)}
-            />
-            
-            {/* Drawer */}
-            <motion.div 
-              initial={{ x: '100%' }} 
-              animate={{ x: 0 }} 
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="lg:hidden fixed inset-y-0 right-0 w-full max-w-sm bg-[#020617] border-l border-white/10 z-[100] overflow-y-auto"
-            >
-              <div className="flex flex-col h-full p-4 sm:p-6 pt-20">
-                {/* Close button inside drawer */}
-                <button
-                  onClick={() => setIsOpen(false)}
-                  className="absolute top-4 right-4 p-2 text-white bg-white/5 border border-white/10 rounded-lg"
-                  aria-label="Close menu"
-                >
-                  <X size={20} />
-                </button>
+      {/* --- MOBILE DRAWER --- */}
+      {(isOpen || isDrawerVisible) && (
+        <>
+          {/* Overlay */}
+          <div 
+            className={`lg:hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[99] transition-opacity duration-300 ${
+              isOpen ? 'opacity-100' : 'opacity-0'
+            }`}
+            onClick={() => setIsOpen(false)}
+          />
+          
+          {/* Drawer */}
+          <div 
+            ref={drawerRef}
+            className="lg:hidden fixed inset-y-0 right-0 w-full max-w-sm bg-[#020617] border-l border-white/10 z-[100] overflow-y-auto transition-transform duration-300 ease-out"
+            style={{ transform: 'translateX(100%)' }}
+          >
+            <div className="flex flex-col h-full p-4 sm:p-6 pt-20">
+              {/* Close button inside drawer */}
+              <button
+                onClick={() => setIsOpen(false)}
+                className="absolute top-4 right-4 p-2 text-white bg-white/5 border border-white/10 rounded-lg"
+                aria-label="Close menu"
+              >
+                <X size={20} />
+              </button>
 
-                {/* Nav Links */}
-                <div className="flex flex-col space-y-2 mb-8">
-                  <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.4em] px-2 mb-2">Menu</p>
-                  {navLinks.map((link) => (
-                    <Link
-                      key={link.name} 
-                      to={link.path}
-                      className={`flex justify-between items-center p-3 sm:p-4 rounded-xl text-base sm:text-lg font-bold border transition-all ${
-                        location.pathname === link.path 
-                          ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20 border-blue-500/30' 
-                          : 'bg-white/5 text-slate-300 hover:bg-white/10 border-white/5'
-                      }`}
-                      onClick={() => setIsOpen(false)}
-                    >
-                      <span className="flex-1">{link.name}</span>
-                      <ChevronRight size={16} sm:size={18} className={location.pathname === link.path ? 'text-white' : 'opacity-30'} />
-                    </Link>
-                  ))}
-                </div>
-
-                {/* Account Controls */}
-                <div className="mt-auto pb-4 sm:pb-8 flex flex-col space-y-4">
-                  <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.4em] px-2 mb-1">Account</p>
-                  {user ? (
-                    <div className="flex flex-col space-y-3">
-                      <div className="grid grid-cols-2 gap-2 sm:gap-3">
-                        <Link 
-                          to="/profile" 
-                          className="flex items-center justify-center gap-2 bg-white/5 py-2.5 sm:py-3 rounded-lg text-xs font-bold uppercase border border-white/10 text-white hover:bg-white/10 transition-colors"
-                          onClick={() => setIsOpen(false)}
-                        >
-                          <UserIcon size={12} sm:size={14} /> Profile
-                        </Link>
-                        <button 
-                          onClick={() => {
-                            handleLogout();
-                            setIsOpen(false);
-                          }} 
-                          className="flex items-center justify-center gap-2 bg-red-500/10 text-red-500 py-2.5 sm:py-3 rounded-lg text-xs font-bold uppercase border border-red-500/20 hover:bg-red-500/20 transition-colors"
-                        >
-                          <LogOut size={12} sm:size={14} /> Logout
-                        </button>
-                      </div>
-                      {isAdmin && (
-                        <Link 
-                          to="/admin" 
-                          className="w-full text-center bg-amber-500/10 text-amber-500 py-2.5 sm:py-3 rounded-lg font-bold border border-amber-500/20 text-xs uppercase tracking-wider hover:bg-amber-500/20 transition-colors"
-                          onClick={() => setIsOpen(false)}
-                        >
-                          <ShieldCheck size={12} sm:size={14} className="inline mr-2" /> Admin
-                        </Link>
-                      )}
-                    </div>
-                  ) : (
-                    <Link 
-                      to="/login" 
-                      className="w-full text-center bg-blue-600 text-white py-3 sm:py-3.5 rounded-lg font-bold text-xs sm:text-sm tracking-wider uppercase hover:bg-blue-500 transition-colors shadow-lg shadow-blue-600/30"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      Sign In
-                    </Link>
-                  )}
-                </div>
+              {/* Nav Links */}
+              <div className="flex flex-col space-y-2 mb-8">
+                <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.4em] px-2 mb-2">Menu</p>
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.name} 
+                    to={link.path}
+                    className={`flex justify-between items-center p-3 sm:p-4 rounded-xl text-base sm:text-lg font-bold border transition-all ${
+                      location.pathname === link.path 
+                        ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20 border-blue-500/30' 
+                        : 'bg-white/5 text-slate-300 hover:bg-white/10 border-white/5'
+                    }`}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <span className="flex-1">{link.name}</span>
+                    <ChevronRight size={16} className={location.pathname === link.path ? 'text-white' : 'opacity-30'} />
+                  </Link>
+                ))}
               </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+
+              {/* Account Controls */}
+              <div className="mt-auto pb-4 sm:pb-8 flex flex-col space-y-4">
+                <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.4em] px-2 mb-1">Account</p>
+                {user ? (
+                  <div className="flex flex-col space-y-3">
+                    <div className="grid grid-cols-2 gap-2 sm:gap-3">
+                      <Link 
+                        to="/profile" 
+                        className="flex items-center justify-center gap-2 bg-white/5 py-2.5 sm:py-3 rounded-lg text-xs font-bold uppercase border border-white/10 text-white hover:bg-white/10 transition-colors"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        <UserIcon size={12} /> Profile
+                      </Link>
+                      <button 
+                        onClick={() => {
+                          handleLogout();
+                          setIsOpen(false);
+                        }} 
+                        className="flex items-center justify-center gap-2 bg-red-500/10 text-red-500 py-2.5 sm:py-3 rounded-lg text-xs font-bold uppercase border border-red-500/20 hover:bg-red-500/20 transition-colors"
+                      >
+                        <LogOut size={12} /> Logout
+                      </button>
+                    </div>
+                    {isAdmin && (
+                      <Link 
+                        to="/admin" 
+                        className="w-full text-center bg-amber-500/10 text-amber-500 py-2.5 sm:py-3 rounded-lg font-bold border border-amber-500/20 text-xs uppercase tracking-wider hover:bg-amber-500/20 transition-colors"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        <ShieldCheck size={12} className="inline mr-2" /> Admin
+                      </Link>
+                    )}
+                  </div>
+                ) : (
+                  <Link 
+                    to="/login" 
+                    className="w-full text-center bg-blue-600 text-white py-3 sm:py-3.5 rounded-lg font-bold text-xs sm:text-sm tracking-wider uppercase hover:bg-blue-500 transition-colors shadow-lg shadow-blue-600/30"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Sign In
+                  </Link>
+                )}
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </>
   );
 };
