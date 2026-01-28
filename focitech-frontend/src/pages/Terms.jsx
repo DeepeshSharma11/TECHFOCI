@@ -573,7 +573,7 @@ const Terms = () => {
                       <div className="flex items-center gap-3">
                         <Mail className="w-5 h-5 text-cyan-500" />
                         <a href="Thefocitech@gmail.com" className="text-cyan-400 hover:text-cyan-300 transition-colors">
-                          Thefocitech@gmail.com
+                          Thefocitech@gmail.com 
                         </a>
                       </div>
                     </div>
