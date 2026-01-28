@@ -197,7 +197,7 @@ const Footer = () => {
                     href="mailto:info@focitech.in" 
                     className="text-xs sm:text-sm hover:text-blue-500 transition-colors duration-300 break-words"
                   >
-                    info.technoviax@gmail.com
+                    Thefocitech@gmail.com
                   </a>
                 </div>
               </div>

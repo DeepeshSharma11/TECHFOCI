@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { supabase } from '../supabaseClient';
-import api from '../api/client'; // Using our updated axios client
+import api from '../api/client'; 
 
 const AuthContext = createContext({
   user: null,

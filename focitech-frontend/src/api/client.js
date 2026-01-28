@@ -3,8 +3,8 @@ import { supabase } from '../supabaseClient';
 
 // 1. Centralized Configuration
 // IMPORTANT: Backend logs mein 404 aa raha hai, isliye base URL check karein.
-const API_URL = import.meta.env.VITE_API_URL || 'https://techfoci.onrender.com/api/v1';
-// const API_URL = 'http://localhost:8000/api/v1';
+// const API_URL = import.meta.env.VITE_API_URL || 'https://techfoci.onrender.com/api/v1';
+const API_URL = 'http://localhost:8000/api/v1';
 
 
 const api = axios.create({
