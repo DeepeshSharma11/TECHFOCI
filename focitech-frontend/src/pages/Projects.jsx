@@ -172,7 +172,7 @@ const Projects = () => {
 
       {/* Decorative Footer Label */}
       <p className="text-center text-slate-800 text-[10px] mt-24 uppercase tracking-[0.5em] font-black">
-        Portfolio Infrastructure Node 01 | Secure Connection
+        Portfolio Infrastructure | Secure Connection
       </p>
     </div>
   );
