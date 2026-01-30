@@ -29,24 +29,35 @@ const Navbar = () => {
     setIsDrawerVisible(false);
   }, [location.pathname]);
 
-  // Handle drawer animation
+  // Handle drawer animation and visibility
   useEffect(() => {
     if (isOpen) {
-      // First show the drawer, then trigger animation
+      // Show drawer immediately when opening
       setIsDrawerVisible(true);
-      // Small timeout to ensure DOM is updated
-      setTimeout(() => {
-        if (drawerRef.current) {
-          drawerRef.current.style.transform = 'translateX(0)';
-        }
-      }, 10);
+      // Force reflow to ensure DOM is updated
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          if (drawerRef.current) {
+            drawerRef.current.style.transform = 'translateX(0)';
+            drawerRef.current.style.transition = 'transform 300ms ease-out';
+          }
+        });
+      });
     } else {
       if (drawerRef.current) {
+        // Start closing animation
         drawerRef.current.style.transform = 'translateX(100%)';
+        drawerRef.current.style.transition = 'transform 300ms ease-out';
+        
         // Wait for animation to complete before hiding
-        setTimeout(() => {
+        const timer = setTimeout(() => {
           setIsDrawerVisible(false);
         }, 300);
+        
+        return () => clearTimeout(timer);
+      } else {
+        // If drawerRef doesn't exist yet, just hide it
+        setIsDrawerVisible(false);
       }
     }
   }, [isOpen]);
@@ -71,6 +82,14 @@ const Navbar = () => {
       document.body.style.overflow = 'unset';
     };
   }, [isOpen]);
+
+  // Reset drawer transform when it becomes visible
+  useEffect(() => {
+    if (isDrawerVisible && drawerRef.current) {
+      // Ensure drawer starts off-screen when visible
+      drawerRef.current.style.transform = 'translateX(100%)';
+    }
+  }, [isDrawerVisible]);
 
   const handleLogout = async () => {
     try {
@@ -205,7 +224,7 @@ const Navbar = () => {
       </nav>
 
       {/* --- MOBILE DRAWER --- */}
-      {(isOpen || isDrawerVisible) && (
+      {(isDrawerVisible) && (
         <>
           {/* Overlay */}
           <div 
@@ -218,8 +237,11 @@ const Navbar = () => {
           {/* Drawer */}
           <div 
             ref={drawerRef}
-            className="lg:hidden fixed inset-y-0 right-0 w-full max-w-sm bg-[#020617] border-l border-white/10 z-[100] overflow-y-auto transition-transform duration-300 ease-out"
-            style={{ transform: 'translateX(100%)' }}
+            className="lg:hidden fixed inset-y-0 right-0 w-full max-w-sm bg-[#020617] border-l border-white/10 z-[100] overflow-y-auto"
+            style={{ 
+              transform: 'translateX(100%)',
+              transition: 'transform 300ms ease-out'
+            }}
           >
             <div className="flex flex-col h-full p-4 sm:p-6 pt-20">
               {/* Close button inside drawer */}
